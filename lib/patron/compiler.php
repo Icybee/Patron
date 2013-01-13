@@ -11,6 +11,8 @@
 
 namespace Patron;
 
+use ICanBoogie\I18n;
+
 class Compiler
 {
 	public function __invoke($template)
@@ -197,7 +199,7 @@ class TranslateNode extends ExpressionNode
 {
 	protected function render($expression)
 	{
-		return t($expression);
+		return I18n\t($expression);
 	}
 }
 

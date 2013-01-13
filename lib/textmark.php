@@ -1362,34 +1362,17 @@ class Textmark_Parser extends MarkdownExtra_Parser
 			if (preg_match('#vimeo.com/(\d+)#', $url, $matches))
 			{
 				$id = $matches[1];
-				$data = \ICanBoogie\escape("http://vimeo.com/moogaloop.swf?clip_id=$id&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=F65FB8&fullscreen=1");
 
 				$rc = <<<EOT
-<p align="center">
-	<object width="$w" height="$h" data="$data" type="application/x-shockwave-flash">
-		<param name="movie" value="$data" />
-		<param name="wmode" value="transparent" />
-		<param name="allowfullscreen" value="true" />
-		<param name="allowscriptaccess" value="always" />
-	</object>
-</p>
+<p align="center"><iframe src="http://player.vimeo.com/video/$id?show_title=1&show_byline=1&show_portrait=0&color=F65FB8" width="$w" height="$h" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></p>
 EOT;
-
 			}
 			else if (preg_match('#youtube.com/(watch)?\?v=([^\&\#]+)#', $url, $matches))
 			{
 				$id = $matches[2];
-				$data = \ICanBoogie\escape("http://www.youtube.com/v/$id&fs=1&rel=1&border=0&color1=0x993C72&color2=0xF65FB8");
 
 				$rc = <<<EOT
-<p align="center">
-	<object width="$w" height="$h" data="$data" type="application/x-shockwave-flash">
-		<param name="movie" value="$data" />
-		<param name="wmode" value="transparent" />
-		<param name="allowfullscreen" value="true" />
-		<param name="allowscriptaccess" value="always" />
-	</object>
-</p>
+<p align="center"><iframe type="text/html" width="$w" height="$h" src="http://www.youtube.com/embed/$id?controls=2" frameborder="0"></iframe></p>
 EOT;
 			}
 			else if (preg_match('#dailymotion.com/video/([^_]+)#', $url, $matches))
@@ -1415,17 +1398,10 @@ EOT;
 		{
 			if (preg_match('#soundcloud.com/#', $url, $matches))
 			{
-				$data = \ICanBoogie\escape('http://player.soundcloud.com/player.swf');
-				$flashvars = \ICanBoogie\escape('url=' . urlencode($url) . '&show_comments=true&color=F65FB8');
+				$id = urlencode($url);
 
 				$rc = <<<EOT
-<p>
-	<object height="81" width="100%" data="$data" type="application/x-shockwave-flash">
-		<param name="movie" value="$data" />
-		<param name="allowscriptaccess" value="always" />
-		<param name="flashvars" value="$flashvars" />
-	</object>
-</p>
+<p align="center"><iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=$url"></iframe></p>
 EOT;
 
 				return $this->hashPart($rc, 'B');

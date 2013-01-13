@@ -76,13 +76,6 @@ class ControlNode extends Node
 				{
 					$value = $args[$param];
 
-					if (isset($options['evaluate']))
-					{
-						//\ICanBoogie\log('\4:: evaluate "\3" with value: \5, params \1 and args \2', array($hook->params, $args, $param, $name, $value));
-
-						$args[$param] = $engine->evaluate($value);
-					}
-
 					if (isset($options['expression']))
 					{
 						$silent = !empty($options['expression']['silent']);
@@ -132,6 +125,20 @@ class ControlNode extends Node
 				)
 			);
 		}
+
+		#
+		# resolve arguments
+		#
+
+		foreach ($args as &$arg)
+		{
+			if ($arg instanceof ControlNode)
+			{
+				$arg = $engine($arg->nodes); // FIXME-20121226: this should be $arg($engine, $context)
+			}
+		}
+
+		unset($arg);
 
 		#
 		# call hook

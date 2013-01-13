@@ -38,3 +38,11 @@ defined('Patron\CHARSET') or define('Patron\CHARSET', 'utf-8');
  * @var string
  */
 const PREFIX = 'p:';
+
+/*
+ * Add package path to ICanBoogie so that it can discover our config.
+ */
+if (class_exists('ICanBoogie\Core', true))
+{
+	\ICanBoogie\Core::add_path(__DIR__);
+}
