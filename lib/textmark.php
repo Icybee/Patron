@@ -548,25 +548,23 @@ class Textmark_Parser extends MarkdownExtra_Parser
 		switch ($matches['1'])
 		{
 			case 'youtube':
-				{
-					preg_match('#v=([^\&]+)#', $parts['query'], $matches);
+ 				preg_match('#v=([^\&]+)#', $parts['query'], $matches);
 
-					$data = 'http://www.youtube.com/v/' . $matches[1] . '&amp;fs=1&amp;rel=1&amp;border=0';
-					$width = 420;
-					$height = 360;
-				}
+				$data = 'http://www.youtube.com/v/' . $matches[1] . '&amp;fs=1&amp;rel=1&amp;border=0';
+				$width = 420;
+				$height = 360;
+
 				break;
 
 			case 'dailymotion':
-				{
-					preg_match('#video\/([^_]+)#', $parts['path'], $matches);
+				preg_match('#video\/([^_]+)#', $parts['path'], $matches);
 
-					//				echo l('query: \1', $matches);
+				//				echo l('query: \1', $matches);
 
-					$data = 'http://www.dailymotion.com/swf/' . $matches[1];
-					$width = 420;
-					$height = 360;
-				}
+				$data = 'http://www.dailymotion.com/swf/' . $matches[1];
+				$width = 420;
+				$height = 360;
+
 				break;
 		}
 
@@ -1367,13 +1365,23 @@ class Textmark_Parser extends MarkdownExtra_Parser
 <p align="center"><iframe src="http://player.vimeo.com/video/$id?show_title=1&show_byline=1&show_portrait=0&color=F65FB8" width="$w" height="$h" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></p>
 EOT;
 			}
-			else if (preg_match('#youtube.com/(watch)?\?v=([^\&\#]+)#', $url, $matches))
+			else if (strpos($url, 'youtube.com/watch') !== false)
 			{
-				$id = $matches[2];
+				$query = parse_url($url, PHP_URL_QUERY);
+				parse_str($query, $params);
 
-				$rc = <<<EOT
+				if (empty($params['v']))
+				{
+					$rc = \ICanBoogie\format('Missing <q>v</q> param form: %url', array('url' => $url));
+				}
+				else
+				{
+					$id = $params['v'];
+
+					$rc = <<<EOT
 <p align="center"><iframe type="text/html" width="$w" height="$h" src="http://www.youtube.com/embed/$id?controls=2" frameborder="0"></iframe></p>
 EOT;
+				}
 			}
 			else if (preg_match('#dailymotion.com/video/([^_]+)#', $url, $matches))
 			{
