@@ -134,7 +134,14 @@ class ControlNode extends Node
 		{
 			if ($arg instanceof ControlNode)
 			{
-				$arg = $engine($arg->nodes); // FIXME-20121226: this should be $arg($engine, $context)
+				if (isset($arg->args['select']))
+				{
+					$arg = $engine->evaluate($arg->args['select']);
+				}
+				else
+				{
+					$arg = $engine($arg->nodes); // FIXME-20121226: this should be $arg($engine, $context)
+				}
 			}
 		}
 
