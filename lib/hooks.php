@@ -433,4 +433,37 @@ class Hooks
 
 		return $patron($template, $select);
 	}
+
+	/**
+	 * Translates and interpolates a string.
+	 *
+	 * The arguments for the interpolation are provided using the attributes of the markup, or the
+	 *  `with-param` construction.
+	 *
+	 * <pre>
+	 * <p:translate
+	 *     native = string>
+	 *     <!-- Content: p:with-param* -->
+	 * </p:translate>
+	 * </pre>
+	 *
+	 * Example:
+	 *
+	 * <pre>
+	 * <p:translate native="Posted on :date by !name">
+	 *     <p:with-param name="date"><time datetime="#{@date}" pubdate="pubdate">#{@date.format_date()}</time></p:with-param>
+	 *     <p:with-param name="name" select="@user.name" />
+	 * </p:translate>
+	 * </pre>
+	 *
+	 * @param array $args
+	 * @param Engine $patron
+	 * @param mixed $template
+	 */
+	static public function markup_translate(array $args, Engine $patron, $template)
+	{
+		$native = $args['native'];
+
+		return call_user_func('ICanBoogie\I18n\t', $native, $args);
+	}
 }

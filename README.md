@@ -91,4 +91,4 @@ the `make clean` command.
 
 ## License
 
-Prototype is licensed under the New BSD License - See the LICENSE file for details.
+Patron is licensed under the New BSD License - See the LICENSE file for details.

@@ -21,6 +21,9 @@
 		"php": ">=5.3.0",
 		"icanboogie/common": "*"
 	},
+	"suggest": {
+		"icanboogie/i18n": "Required to use the translation notation and markup."
+	},
 	"autoload": {
 		"classmap": [ "lib/" ],
 		"files": [ "bootstrap.php", "lib/helpers.php" ]

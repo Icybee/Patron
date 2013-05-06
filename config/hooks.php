@@ -82,6 +82,14 @@ return array
 			'no-binding' => true
 		),
 
+		'translate' => array
+		(
+			$hooks . 'markup_translate', array
+			(
+				'native' => array('required' => true)
+			)
+		),
+
 		/*
 		 * elements
 		 */
