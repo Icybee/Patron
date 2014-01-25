@@ -178,7 +178,7 @@ class Engine extends TextHole
 		#
 		#
 
-		$trace = null;
+		$trace_html = null;
 
 		if ($this->trace)
 		{
@@ -198,12 +198,12 @@ class Engine extends TextHole
 					}
 				}
 
-				$trace .= sprintf('#%02d: in %s "%s"', $i--, $which, $message) . '<br />';
+				$trace_html .= sprintf('#%02d: in %s "%s"', $i--, $which, $message) . '<br />';
 			}
 
-			if ($trace)
+			if ($trace_html)
 			{
-				$trace = '<pre>' . $trace . '</pre>';
+				$trace = '<pre>' . $trace_html . '</pre>';
 			}
 		}
 
@@ -211,7 +211,7 @@ class Engine extends TextHole
 		#
 		#
 
-		$this->errors[] = '<div class="alert alert-error">' . $alert . $trace . '</div>';
+		$this->errors[] = '<div class="alert alert-error">' . $alert . $trace_html . '</div>';
 	}
 
 	public function handle_exception(\Exception $e)
