@@ -11,8 +11,6 @@
 
 namespace Patron;
 
-use ICanBoogie\Hook;
-
 class ControlNode extends Node
 {
 	public $name;

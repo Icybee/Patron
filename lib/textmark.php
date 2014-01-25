@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-use ICanBoogie\Hook;
+use Patron\Hook;
 
 @define('MARKDOWN_PARSER_CLASS', 'Textmark_Parser');
 
