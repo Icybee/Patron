@@ -15,11 +15,6 @@ use ICanBoogie\Debug;
 use ICanBoogie\Exception;
 use ICanBoogie\Hook;
 
-if (!defined('WDTEXTHOLE_USE_APC'))
-{
-	define('WDTEXTHOLE_USE_APC', function_exists('apc_store'));
-}
-
 class TextHole
 {
 	public function __construct()
@@ -469,30 +464,11 @@ class TextHole
 			$parsed = self::$function_chain_cache[$expression];
 		}
 
-		if (!$parsed && WDTEXTHOLE_USE_APC)
-		{
-			$parsed = apc_fetch(__CLASS__ . '/' . $expression, $success);
-
-			//\ICanBoogie\log("expression: <em>$expression</em> from APC");
-
-			if (!$success)
-			{
-				$parsed = null;
-			}
-
-			self::$function_chain_cache[$expression] = $parsed;
-		}
-
 		if (!$parsed)
 		{
 			$parsed = self::parseExpression_callback($expression);
 
 			self::$function_chain_cache[$expression] = $parsed;
-
-			if (WDTEXTHOLE_USE_APC)
-			{
-				apc_store(__CLASS__ . '/' . $expression, $parsed);
-			}
 		}
 
 		if (empty(self::$function_chain_cache_usage[$expression]))
