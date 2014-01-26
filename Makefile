@@ -1,23 +1,20 @@
-install:
-	@if [ ! -f "composer.phar" ] ; then \
-		echo "Installing composer..." ; \
-		curl -s https://getcomposer.org/installer | php ; \
-	fi
-	
+composer.phar:
+	@echo "Installing composer..."
+	@curl -sS https://getcomposer.org/installer | php
+
+vendor: composer.phar
 	@php composer.phar install
 
-test:
-	@if [ ! -d "vendor" ] ; then \
-		make install ; \
-	fi
+update: composer.phar
+	@php composer.phar update
 
+autoload: vendor
+	@php composer.phar dump-autoload
+
+test: vendor
 	@phpunit
 
-doc:
-	@if [ ! -d "vendor" ] ; then \
-		make install ; \
-	fi
-
+doc: vendor
 	@mkdir -p "docs"
 
 	@apigen \
@@ -27,9 +24,6 @@ doc:
 	--exclude "*/composer/*" \
 	--template-config /usr/share/php/data/ApiGen/templates/bootstrap/config.neon
 
-phar:
-	@php -d phar.readonly=0 ./build/phar.php;
-	
 clean:
 	@rm -fR docs
 	@rm -fR vendor
