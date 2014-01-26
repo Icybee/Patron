@@ -32,6 +32,14 @@ return array
 			'no-binding' => true
 		),
 
+		'decorate' => array
+		(
+			$hooks . 'markup_decorate', array
+			(
+				'with' => array('required' => true)
+			)
+		),
+
 		'foreach' => array
 		(
 			$hooks . 'markup_foreach', array

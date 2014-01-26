@@ -466,4 +466,52 @@ class Hooks
 
 		return call_user_func('ICanBoogie\I18n\t', $native, $args);
 	}
+
+	/**
+	 * Decorates a content with a template.
+	 *
+	 * The content of the markup is rendered to create the component to decorate, it is then passed
+	 * to the decorating template as the `component` variable.
+	 *
+	 * The name of the decorating template is specified with the `with` attribute, and is
+	 * interpolated e.g. if "page" is specified the templates "@page.html" or "partials/@page.html"
+	 * are used, which ever comes first.
+	 *
+	 * The parameters specified using `with-param` are all turned into variables.
+	 *
+	 * <pre>
+	 * <p:decorate
+	 *     with = string>
+	 *     <!-- Content: p:with-param*, template -->
+	 * </p:decorate>
+	 *
+	 * Example:
+	 *
+	 * <pre>
+	 * <p:decorate with="page">
+	 *     <p:page:content id="body" />
+	 * </p:decorate>
+	 * </pre>
+	 *
+	 * @param array $args
+	 * @param Engine $engine
+	 * @param mixed $template
+	 */
+	static public function markup_decorate(array $args, Engine $engine, $template)
+	{
+		$template_name = $args['with'];
+
+		$rendered_template = $engine($template);
+
+		unset($args['with']);
+
+		$engine->context['component'] = $rendered_template;
+
+		foreach ($args as $name => $value)
+		{
+			$engine->context[$name] = $value;
+		}
+
+		return $engine->callTemplate('@' . $template_name, $args);
+	}
 }
