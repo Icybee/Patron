@@ -11,39 +11,6 @@
 
 namespace Patron;
 
-/**
- * Escape HTML special characters.
- *
- * HTML special characters are escaped using the htmlspecialchars() function with the
- * ENT_COMPAT flag.
- *
- * @param string $str The string to escape.
- * @param string $charset The charset of the string to escape. Defaults to ICanBoogie\CHARSET
- * (utf-8).
- *
- * @return string
- */
-function escape($str, $charset=CHARSET)
-{
-	return htmlspecialchars($str, ENT_COMPAT, $charset);
-}
-
-/**
- * Escape all applicable characters to HTML entities.
- *
- * Applicable characters are escaped using the htmlentities() function with the ENT_COMPAT flag.
- *
- * @param string $str The string to escape.
- * @param string $charset The charset of the string to escape. Defaults to ICanBoogie\CHARSET
- * (utf-8).
- *
- * @return string
- */
-function escape_all($str, $charset=CHARSET)
-{
-	return htmlentities($str, ENT_COMPAT, $charset);
-}
-
 function tr($str, $from, $to)
 {
 	return strtr($str, $from, $to);

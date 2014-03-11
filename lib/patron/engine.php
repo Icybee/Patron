@@ -20,6 +20,8 @@ define('WDPATRON_DELIMIT_MACROS', false);
 
 class Engine extends TextHole
 {
+	const PREFIX = 'p:';
+
 	protected $trace_templates = false;
 
 	public function __construct()
@@ -335,7 +337,7 @@ class Engine extends TextHole
 
 				/*TODO-20120106: because the template is evaluated elsewhere, we can't attach
 				 * its file location.
-				$template = $this->htmlparser->parse($template, \Patron\PREFIX);
+				$template = $this->htmlparser->parse($template, self::PREFIX);
 
 				if ($file)
 				{

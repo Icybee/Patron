@@ -129,6 +129,14 @@ class Hooks
 	 * </p:foreach>
 	 * </pre>
 	 *
+	 * At each turn the following variables are updated in `self`:
+	 *
+	 * - `count`: The number of entries.
+	 * - `position`: The position of the current entry.
+	 * - `left`: The number of entries left.
+	 * - `even`: "even" if the position is even, an empty string otherwise.
+	 * - `key`: The key of the entry.
+	 *
 	 * @param array $args
 	 * @param Engine $patron
 	 * @param mixed $template
@@ -359,13 +367,13 @@ class Hooks
 	 *
 	 * The value to which a variable is bound (the value of the variable) can be an object of any
 	 * of the types that can be returned by expressions. There are two elements that can be used
-	 * to bind variables: `p:variable` and `p:param`. The difference is that the value specified
-	 * on the `p:param` variable is only a default value for the binding; when the template within
-	 * which the `p:param` element occurs is invoked, parameters may be passed that are used in
-	 * place of the default values.
+	 * to bind variables: `p:variable` and `p:with-param`. The difference is that the value
+	 * specified on the `p:with-param` variable is only a default value for the binding; when
+	 * the template within which the `p:with-param` element occurs is invoked, parameters may
+	 * be passed that are used in place of the default values.
 	 *
-	 * Both `p:variable` and `p:param` have a required name attribute, which specifies the name
-	 * of the variable. The value of the name attribute is a qualified name.
+	 * Both `p:variable` and `p:with-param` have a required name attribute, which specifies the
+	 * name of the variable. The value of the name attribute is a qualified name.
 	 *
 	 * Example:
 	 *
@@ -437,15 +445,15 @@ class Hooks
 	/**
 	 * Translates and interpolates a string.
 	 *
-	 * The arguments for the interpolation are provided using the attributes of the markup, or the
-	 *  `with-param` construction.
-	 *
 	 * <pre>
 	 * <p:translate
 	 *     native = string>
 	 *     <!-- Content: p:with-param* -->
 	 * </p:translate>
 	 * </pre>
+	 *
+	 * The arguments for the interpolation are provided using the attributes of the markup, or the
+	 *  `with-param` construction.
 	 *
 	 * Example:
 	 *
@@ -470,6 +478,13 @@ class Hooks
 	/**
 	 * Decorates a content with a template.
 	 *
+	 * <pre>
+	 * <p:decorate
+	 *     with = string>
+	 *     <!-- Content: p:with-param*, template -->
+	 * </p:decorate>
+	 * </pre>
+	 *
 	 * The content of the markup is rendered to create the component to decorate, it is then passed
 	 * to the decorating template as the `component` variable.
 	 *
@@ -478,12 +493,6 @@ class Hooks
 	 * are used, which ever comes first.
 	 *
 	 * The parameters specified using `with-param` are all turned into variables.
-	 *
-	 * <pre>
-	 * <p:decorate
-	 *     with = string>
-	 *     <!-- Content: p:with-param*, template -->
-	 * </p:decorate>
 	 *
 	 * Example:
 	 *

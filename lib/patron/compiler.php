@@ -28,7 +28,7 @@ class Compiler
 			)
 		);
 
-		$tree = $parser->parse($template, PREFIX);
+		$tree = $parser->parse($template, Engine::PREFIX);
 
 		return $this->parse_html_tree($tree);
 	}
@@ -183,7 +183,7 @@ class ExpressionNode extends Node
 
 		if ($this->escape)
 		{
-			$rc = escape($rc);
+			$rc = \ICanBoogie\escape($rc);
 		}
 
 		return $rc;
