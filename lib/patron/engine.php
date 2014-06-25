@@ -204,7 +204,7 @@ class Engine extends TextHole
 
 			if ($trace_html)
 			{
-				$trace = '<pre>' . $trace_html . '</pre>';
+				$trace_html = '<pre>' . $trace_html . '</pre>';
 			}
 		}
 
