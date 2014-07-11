@@ -105,7 +105,7 @@ class EvaluateNode extends ExpressionNode
 									'expression' => $expression,
 									'var' => $previous_identifier,
 									'keys' => implode(', ', $value instanceof Context ? $value->keys() : array_keys((array) $value)),
-									'value' => $value
+									'value' => \ICanBoogie\dump($value)
 								)
 							);
 						}
