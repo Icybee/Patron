@@ -265,38 +265,16 @@ class Engine extends TextHole
 	*/
 
 	protected $templates = array();
-	protected $templates_searched = false;
-
-	protected function search_templates()
-	{
-		global $core;
-
-		if ($this->templates_searched)
-		{
-			return;
-		}
-
-		$templates = $core->site->partial_templates;
-
-		foreach ($templates as $id => $path)
-		{
-			$this->addTemplate($id, '!f:' . $path);
-		}
-
-		$this->templates_searched = true;
-	}
 
 	public function addTemplate($name, $template)
 	{
 		if (isset($this->templates[$name]))
 		{
-			$this->error
-			(
-				'The template %name is already defined ! !template', array
-				(
-					'%name' => $name, '!template' => $template
-				)
-			);
+			$this->error('The template %name is already defined ! !template', [
+
+				'%name' => $name, '!template' => $template
+
+			]);
 
 			return;
 		}
@@ -304,58 +282,53 @@ class Engine extends TextHole
 		$this->templates[$name] = $template;
 	}
 
-	protected function get_template($name)
+	protected function resolve_template($name)
 	{
-		#
-		# if the template is not defined, and we haven't searched templates
-		# defined by modules, now is the time
-		#
+		$file = $this->get_file();
+		$pathname = dirname($file);
 
-		if (empty($this->templates[$name]))
+		$tries = [
+
+			"{$pathname}/partials/{$name}.html",
+			"{$pathname}/{$name}.html",
+			\ICanBoogie\DOCUMENT_ROOT . "protected/all/templates/partials/{$name}.html",
+			\ICanBoogie\DOCUMENT_ROOT . "protected/all/templates/{$name}.html"
+
+		];
+
+		foreach ($tries as $try)
 		{
-			$this->search_templates();
-		}
-
-		if (isset($this->templates[$name]))
-		{
-			$template = $this->templates[$name];
-
-			#
-			# we convert the template into a tree of nodes to speed up following parsings
-			#
-
-			if (is_string($template))
+			if (!file_exists($try))
 			{
-				$file = null;
-
-				if ($template{0} == '!' && $template{1} == 'f' && $template{2} == ':')
-				{
-					$file = substr($template, 3);
-					$template = file_get_contents($file);
-					$file = substr($file, strlen(\ICanBoogie\DOCUMENT_ROOT));
-				}
-
-				/*TODO-20120106: because the template is evaluated elsewhere, we can't attach
-				 * its file location.
-				$template = $this->htmlparser->parse($template, self::PREFIX);
-
-				if ($file)
-				{
-					$template['file'] = $file;
-				}
-				*/
-
-				$this->templates[$name] = $template;
+				continue;
 			}
 
-			return $template;
+			return $this->create_template_from_file($try);
 		}
+
+		throw new TemplateNotFound($name, $tries);
+	}
+
+	protected function create_template_from_file($pathname)
+	{
+		$content = file_get_contents($pathname);
+		$nodes = $this->get_compiled($content);
+
+		return new Template($nodes, [ 'file' => $pathname ]);
+	}
+
+	protected function get_template($name)
+	{
+		if (isset($this->templates[$name]))
+		{
+			return $this->templates[$name];
+		}
+
+		return $this->resolve_template($name);
 	}
 
 	public function callTemplate($name, array $args=array())
 	{
-// 		echo __FUNCTION__ . '::disabled<br />'; return;
-
 		$template = $this->get_template($name);
 
 		if (!$template)
@@ -374,7 +347,7 @@ class Engine extends TextHole
 			return;
 		}
 
-		array_unshift($this->trace, array('template', $name));
+		$this->trace_enter([ 'template', $name, $template ]);
 
 		if (version_compare(PHP_VERSION, '5.3.4', '>='))
 		{
@@ -404,7 +377,7 @@ class Engine extends TextHole
 
 	protected function contextInit()
 	{
-		$this->context = new \BlueTihi\Context(array('self' => null, 'this' => null));
+		$this->context = new \BlueTihi\Context([ 'self' => null, 'this' => null ]);
 	}
 
 	/*
@@ -425,13 +398,6 @@ class Engine extends TextHole
 		}
 
 		return $compiler($template);
-	}
-
-	public function publish($template, $bind=null, array $options=array())
-	{
-		trigger_error('The <q>publish</q> method is deprecated, please use invoke.');
-
-		return $this->__invoke($template, $bind, $options);
 	}
 
 	public function __invoke($template, $bind=null, array $options=array())
@@ -472,25 +438,26 @@ class Engine extends TextHole
 			}
 		}
 
-		if (is_array($template) && isset($template['file']))
+		if (!($template instanceof Template))
 		{
-			$file = $template['file'];
+			if (is_array($template) && isset($template['file']))
+			{
+				$file = $template['file'];
 
-			unset($template['file']);
+				unset($template['file']);
+			}
+
+			if (!is_array($template))
+			{
+				$template = $this->get_compiled($template);
+			}
+
+			$template = new Template($template, [ 'file' => $file ]);
 		}
 
-		if ($file)
+		if ($template->file)
 		{
-			array_unshift($this->trace, array('file', $file));
-		}
-
-		#
-		#
-		#
-
-		if (!is_array($template))
-		{
-			$template = $this->get_compiled($template);
+			$this->trace_enter([ 'file', $template->file ]);
 		}
 
 		$rc = '';
@@ -567,4 +534,33 @@ class Engine extends TextHole
 	*/
 
 	public $context_markup = array(); // should be protected
+}
+
+/**
+ * Exception thrown when a template specified by its name could not be found.
+ */
+class TemplateNotFound extends \InvalidArgumentException
+{
+	use \ICanBoogie\PrototypeTrait;
+
+	private $template_name;
+	private $tries;
+
+	public function __construct($template_name, array $tries, $code=500, \Exception $previous=null)
+	{
+		$this->template_name = $template_name;
+		$this->tries = $tries;
+
+		parent::__construct("Template not found: $template_name", $code, $previous);
+	}
+
+	protected function get_template_name()
+	{
+		return $this->template_name;
+	}
+
+	protected function get_tries()
+	{
+		return $this->tries;
+	}
 }

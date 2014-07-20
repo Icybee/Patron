@@ -16,6 +16,16 @@ class Template implements \IteratorAggregate
 	public $file;
 	public $nodes;
 
+	public function __construct(array $nodes, array $options=[])
+	{
+		$this->nodes = $nodes;
+
+		if (isset($options['file']))
+		{
+			$this->file = $options['file'];
+		}
+	}
+
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->nodes);
