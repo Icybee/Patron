@@ -159,6 +159,24 @@ EOT;
 				return $this->hashPart($html, 'B');
 			}
 
+			#
+			# Instagram
+			#
+
+			if (preg_match('#instagram.com/p/([0-9A-Za-z\-]+)#', $url, $matches))
+			{
+				$html = <<<EOT
+<iframe class="embed embed--instagram" frameborder="0" src="//instagram.com/p/{$matches[1]}/embed/"></iframe>
+EOT;
+				return $this->hashPart($html, 'B');
+			}
+
+			#
+			# fallback
+			#
+
+			return $url;
+
 		}, $text);
 	}
 
