@@ -28,7 +28,7 @@
 		"psr-4": {
 			"Patron\\": "lib/"
 		},
-		"classmap": [ "markdown/", "textmark/" ],
+		"classmap": [ "lib/markdown/", "lib/textmark/" ],
 		"files": [ "lib/helpers.php" ]
 	}
 }
