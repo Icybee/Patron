@@ -25,7 +25,10 @@
 		"icanboogie/i18n": "Required to use the translation notation and markup."
 	},
 	"autoload": {
-		"classmap": [ "lib/" ],
+		"psr-4": {
+			"Patron\\": "lib/"
+		},
+		"classmap": [ "markdown/", "textmark/" ],
 		"files": [ "lib/helpers.php" ]
 	}
 }
