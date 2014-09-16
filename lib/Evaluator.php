@@ -318,18 +318,15 @@ class Evaluator
 							return;
 						}
 
-						throw new Exception
-						(
-							'%identifier of expression %expression does not exists in %var (defined: :keys) in: :value', [
+						throw new \Exception(\ICanBoogie\format('%identifier of expression %expression does not exists in %var (defined: :keys) in: :value', [
 
-								'identifier' => $identifier,
-								'expression' => $expression,
-								'var' => $previous_identifier,
-								'keys' => implode(', ', $context instanceof Context ? $context->keys() : array_keys((array) $context)),
-								'value' => \ICanBoogie\dump($context)
+							'identifier' => $identifier,
+							'expression' => $expression,
+							'var' => $previous_identifier,
+							'keys' => implode(', ', $context instanceof Context ? $context->keys() : array_keys((array) $context)),
+							'value' => \ICanBoogie\dump($context)
 
-							]
-						);
+						]));
 					}
 
 					$context = $next_value;
@@ -490,7 +487,7 @@ class Evaluator
 		{
 			$exists = array_key_exists($identifier, $container);
 
-			return $exists ? $identifier[$container] : null;
+			return $exists ? $container[$identifier] : null;
 		}
 
 		# object

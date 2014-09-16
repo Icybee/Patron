@@ -17,9 +17,11 @@
 		"issues": "https://github.com/Icybee/Patron/issues",
 		"source": "https://github.com/Icybee/Patron"
 	},
+	"minimum-stability": "dev",
 	"require": {
 		"php": ">=5.4.0",
-		"icanboogie/common": "*"
+		"icanboogie/common": "*",
+		"icybee/bluetihi": ">=0.0.2"
 	},
 	"suggest": {
 		"icanboogie/i18n": "Required to use the translation notation and markup."

@@ -1,12 +1,21 @@
+# customization
+
+PACKAGE_NAME = "Icybee/Patron"
+
+# do not edit the following lines
+
+usage:
+	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
+
 composer.phar:
 	@echo "Installing composer..."
-	@curl -sS https://getcomposer.org/installer | php
+	@curl -s https://getcomposer.org/installer | php
 
 vendor: composer.phar
-	@php composer.phar install
+	@php composer.phar install --prefer-source --dev
 
-update: composer.phar
-	@php composer.phar update
+update: vendor
+	@php composer.phar update --prefer-source --dev
 
 autoload: vendor
 	@php composer.phar dump-autoload
@@ -19,9 +28,9 @@ doc: vendor
 
 	@apigen \
 	--source ./ \
-	--destination docs/ --title Patron \
-	--exclude "*/tests/*" \
+	--destination docs/ --title $(PACKAGE_NAME) \
 	--exclude "*/composer/*" \
+	--exclude "*/tests/*" \
 	--template-config /usr/share/php/data/ApiGen/templates/bootstrap/config.neon
 
 clean:

@@ -1,4 +1,4 @@
-# Patron
+# Patron [![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=1.3)](https://travis-ci.org/Icybee/Patron)
 
 __Patron__ is a template engine for PHP5.3+. It facilitates a mangeable way to seperate application
 logic and content from its presentation. Templates are usually written in HTML and include keywords
@@ -395,6 +395,20 @@ be cloned with the following command line:
 You can generate the documentation for the package and its dependencies with the `make doc`
 command. The documentation is generated in the `docs` directory. [ApiGen](http://apigen.org/) is
 required. The directory can later be cleaned with the `make clean` command.
+
+
+
+
+
+## Testing
+
+The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
+automatically installed as well as all dependencies required to run the suite. You can later
+clean the directory with the `make clean` command.
+
+The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
+
+[![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=1.3)](https://travis-ci.org/Icybee/Patron)
 
 
 
