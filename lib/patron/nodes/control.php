@@ -86,7 +86,7 @@ class ControlNode extends Node
 						}
 						else
 						{
-							$args[$param] = $engine->evaluate($value, $silent);
+							$args[$param] = $engine->evaluate($context, $value, $silent);
 						}
 					}
 				}
@@ -134,7 +134,7 @@ class ControlNode extends Node
 			{
 				if (isset($arg->args['select']))
 				{
-					$arg = $engine->evaluate($arg->args['select']);
+					$arg = $engine->evaluate($context, $arg->args['select'], false);
 				}
 				else
 				{

@@ -18,12 +18,22 @@ use Brickrouge\Alert;
 
 define('WDPATRON_DELIMIT_MACROS', false);
 
-class Engine extends TextHole
+class Engine
 {
 	const PREFIX = 'p:';
 
 	protected $trace_templates = false;
 
+	/**
+	 * Expression evaluator.
+	 *
+	 * @var Evaluator
+	 */
+	private $evaluator;
+
+	/**
+	 * Initializes the {@link $evaluator} property, and a bunch of functions.
+	 */
 	public function __construct()
 	{
 		#
@@ -31,6 +41,7 @@ class Engine extends TextHole
 		#
 
 		$this->contextInit();
+		$this->evaluator = new Evaluator($this);
 
 		#
 		# add functions
@@ -113,6 +124,118 @@ class Engine extends TextHole
 
 		$this->addFunction('markdown', function($txt) { require_once __DIR__ . '/../textmark.php'; return Markdown($txt); });
 	}
+
+	/**
+	 * Evaluate an expression relative to a context.
+	 *
+	 * @param mixed $context
+	 * @param string $expression
+	 * @param bool $silent
+	 */
+	public function evaluate($expression, $silent=false, $context=null)
+	{
+		$evaluator = $this->evaluator;
+		$context = $context ?: $this->context;
+
+		return $evaluator($expression, $silent);
+	}
+
+
+
+
+
+
+
+	protected $functions = [];
+
+	public function addFunction($name, $callback)
+	{
+		#
+		# FIXME-20080203: should check overrides
+		#
+
+		$this->functions[$name] = $callback;
+	}
+
+	public function findFunction($name)
+	{
+		/*
+		// TODO: move to Engine
+
+		$hook = null;
+
+		try
+		{
+			$hook = Hook::find('patron.functions', $name);
+		}
+		catch (\Exception $e) { }
+
+		if ($hook)
+		{
+			return $hook;
+		}
+		*/
+
+		// /
+
+		#
+		#
+		#
+
+		if (isset($this->functions[$name]))
+		{
+			return $this->functions[$name];
+		}
+
+		$try = 'ICanBoogie\\' . $name;
+
+		if (function_exists($try))
+		{
+			return $try;
+		}
+
+		$try = 'ICanBoogie\I18n\\' . $name;
+
+		if (function_exists($try))
+		{
+			return $try;
+		}
+
+		#
+		# 'wd' pseudo namespace // COMPAT
+		#
+
+		$try = 'wd_' . str_replace('-', '_', $name);
+
+		if (function_exists($try))
+		{
+			return $try;
+		}
+
+		$try = 'Patron\\' . $name;
+
+		if (function_exists($try))
+		{
+			return $try;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private static $singleton;
 
@@ -375,6 +498,8 @@ class Engine extends TextHole
 	**
 	*/
 
+	public $context;
+
 	protected function contextInit()
 	{
 		$this->context = new \BlueTihi\Context([ 'self' => null, 'this' => null ]);
@@ -533,7 +658,7 @@ class Engine extends TextHole
 
 	*/
 
-	public $context_markup = array(); // should be protected
+	public $context_markup = []; // should be protected
 }
 
 /**

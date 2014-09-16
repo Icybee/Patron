@@ -325,7 +325,7 @@ class Hooks
 				return $patron->error('Unexpected child: :node', array(':node' => $node));
 			}
 
-			$value = $patron->evaluate($node->args['test'], true);
+			$value = $patron->evaluate($patron->context, $node->args['test'], true);
 
 			if ($value)
 			{
