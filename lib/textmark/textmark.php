@@ -42,9 +42,6 @@ use Patron\Hook;
 @define('txt_registered',		  '®');
 @define('txt_copyright',		  '©');
 
-require_once 'markdown/markdown.php';
-require_once 'markdown/markdown_extras.php';
-
 class Textmark_Parser extends MarkdownExtra_Parser
 {
 	const NBSP = "\xC2\xA0";
