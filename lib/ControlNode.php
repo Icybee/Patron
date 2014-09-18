@@ -113,15 +113,13 @@ class ControlNode extends Node
 
 		if ($missing)
 		{
-			throw new \ICanBoogie\Exception
-			(
-				'The %param parameter is required for the %markup markup, given %args', array
-				(
-					'%param' => implode(', ', array_keys($missing)),
-					'%markup' => $name,
-					'%args' => json_encode($args)
-				)
-			);
+			throw new \Exception(\ICanBoogie\format('The %param parameter is required for the %markup markup, given %args', [
+
+				'%param' => implode(', ', array_keys($missing)),
+				'%markup' => $name,
+				'%args' => json_encode($args)
+
+			]));
 		}
 
 		#

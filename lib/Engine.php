@@ -12,7 +12,6 @@
 namespace Patron;
 
 use ICanBoogie\Debug;
-use ICanBoogie\Exception;
 
 use Brickrouge\Alert;
 
