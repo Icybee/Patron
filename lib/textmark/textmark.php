@@ -642,40 +642,25 @@ EOT;
 
 	function _doImages_reference_callback($matches)
 	{
+		// FIXME-20140921: Hook only support patron.markup, so we replaced a hack with another
+		// waiting for a better solution.
+
 		if (self::$images_reference_callback === null)
 		{
 			$hook = false;
 
-			try
+			if (class_exists('Icybee\Modules\Images\Hooks'))
 			{
-				$hook = Hook::find('textmark', 'images.reference');
-
-				if (!$hook)
-				{
-					$hook = false;
-				}
+				$hook = 'Icybee\Modules\Images\Hooks::textmark_images_reference';
 			}
-			catch (Exception $e) {}
 
 			self::$images_reference_callback = $hook;
 		}
 
 		if (self::$images_reference_callback !== false)
 		{
-			return $this->hashPart(self::$images_reference_callback->__invoke(array(), $this, $matches));
+			return $this->hashPart(call_user_func(self::$images_reference_callback, [], $this, $matches));
 		}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
