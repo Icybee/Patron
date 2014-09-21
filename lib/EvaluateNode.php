@@ -31,6 +31,6 @@ class EvaluateNode extends ExpressionNode
 
 	protected function render($expression)
 	{
-		return $this->engine->evaluate($this->engine_context, $expression);
+		return $this->engine->evaluate($expression, false, $this->engine_context);
 	}
 }

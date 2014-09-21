@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Patron package.
+ *
+ * (c) Olivier Laviale <olivier.laviale@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Patron;
 
 use BlueTihi\Context;
@@ -41,5 +50,17 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
 		]);
 
 		$evaluator($context, 'one.two.three.four.madonna()');
+	}
+
+	public function test_get_undefined_value_silent()
+	{
+		$evaluator = self::$evaluator;
+		$context = new Context([
+
+			'one' => [ 'two' => [ 'three' => [] ] ]
+
+		]);
+
+		$evaluator($context, 'one.two.three.four.madonna()', true);
 	}
 }

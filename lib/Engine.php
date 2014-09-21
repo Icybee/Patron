@@ -134,9 +134,8 @@ class Engine
 	public function evaluate($expression, $silent=false, $context=null)
 	{
 		$evaluator = $this->evaluator;
-		$context = $context ?: $this->context;
 
-		return $evaluator($expression, $silent);
+		return $evaluator($context ?: $this->context, $expression, $silent);
 	}
 
 
@@ -290,7 +289,7 @@ class Engine
 		}
 		else if ($alert instanceof \Exception)
 		{
-			$alert = Debug::format_alert($alert);
+			$alert = class_exists('ICanBoogie\Debug') ? Debug::format_alert($alert) : (string) $alert;
 		}
 		else
 		{
@@ -306,7 +305,7 @@ class Engine
 		if ($this->trace)
 		{
 			$i = count($this->trace);
-			$root = \ICanBoogie\DOCUMENT_ROOT;
+			$root = $_SERVER['DOCUMENT_ROOT'];
 			$root_length = strlen($root);
 
 			foreach ($this->trace as $trace)
@@ -601,7 +600,14 @@ class Engine
 			}
 			catch (\Exception $e)
 			{
-				$rc .= Debug::format_alert($e);
+				if (class_exists('ICanBoogie\Debug'))
+				{
+					$rc .= Debug::format_alert($e);
+				}
+				else
+				{
+					$rc .= $e;
+				}
 			}
 
 			$rc .= $this->fetchErrors();

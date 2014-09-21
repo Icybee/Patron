@@ -43,7 +43,7 @@ class ControlNode extends Node
 
 		try
 		{
-			$hook = Hook::find('patron.markups', $name);
+			$hook = Hook::find($name);
 		}
 		catch (\Exception $e)
 		{
@@ -86,7 +86,7 @@ class ControlNode extends Node
 						}
 						else
 						{
-							$args[$param] = $engine->evaluate($context, $value, $silent);
+							$args[$param] = $engine->evaluate($value, $silent, $context);
 						}
 					}
 				}
@@ -132,7 +132,7 @@ class ControlNode extends Node
 			{
 				if (isset($arg->args['select']))
 				{
-					$arg = $engine->evaluate($context, $arg->args['select'], false);
+					$arg = $engine->evaluate($arg->args['select'], false, $context);
 				}
 				else
 				{

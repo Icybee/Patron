@@ -13,97 +13,73 @@ namespace Patron;
 
 class Hook
 {
-	static protected $hooks = array();
+	const CONFIG_KEY = 'patron.markups';
 
-	static public function config_constructor($configs)
+	static protected $hooks = [];
+
+	static public function config_constructor(array $fragments)
 	{
-		$by_ns = array();
+		$markups = [];
 
-		foreach ($configs as $config)
+		foreach ($fragments as $path => $fragment)
 		{
-			foreach ($config as $namespace => $hooks)
+			if (empty($fragment[self::CONFIG_KEY]))
 			{
-				if (isset($hooks[0]))
-				{
-					//DIRTY-20100621: COMPAT
-
-					\ICanBoogie\log('COMPAT: double array no longer needed: \1', array($hooks));
-
-					$hooks = array_shift($hooks);
-				}
-
-				foreach ($hooks as $name => $definition)
-				{
-					$by_ns[$namespace . '/' . $name] = $definition;
-				}
+				continue;
 			}
+
+			$markups = array_merge($markups, $fragment[self::CONFIG_KEY]);
 		}
 
-		#
-		# the (object) cast is a workaround for an APC bug: http://pecl.php.net/bugs/bug.php?id=8118
-		#
-
-		return (object) $by_ns;
+		return $markups;
 	}
 
-	static public function find($ns, $name)
+	static public function add($name, array $definition)
+	{
+		self::$hooks[$name] = $definition;
+	}
+
+	static public function find($name)
 	{
 		global $core;
 
 		if (!self::$hooks)
 		{
-			#
-			# the (array) cast is a workaround for an APC bug: http://pecl.php.net/bugs/bug.php?id=8118
-			#
-
-			self::$hooks = (array) $core->configs->synthesize('hooks', __CLASS__ . '::config_constructor');
+			self::$hooks = $core->configs->synthesize('hooks', __CLASS__ . '::config_constructor');
 		}
 
-		if (empty(self::$hooks[$ns . '/' . $name]))
+		if (empty(self::$hooks[$name]))
 		{
-			throw new \Exception(\ICanBoogie\format('Undefined hook %name in namespace %ns', array('%name' => $name, '%ns' => $ns)));
+			throw new \Exception(\ICanBoogie\format('Undefined hook %name', [ '%name' => $name ]));
 		}
 
-		$hook = self::$hooks[$ns . '/' . $name];
+		$hook = self::$hooks[$name];
 
 		#
 		# `$hook` is an array when the hook has not been created yet, in which case we create the
 		# hook on the fly.
 		#
 
-		if (is_array($hook))
+		if (!($hook instanceof Hook))
 		{
 			$tags = $hook;
 
-			list($callback, $params) = $tags + array(1 => array());
+			list($callback, $params) = $tags + [ 1 => [] ];
 
 			unset($tags[0]);
 			unset($tags[1]);
 
-			if (is_string($callback) && $callback[1] == ':' && $callback[0] == 'o')
-			{
-				$class = substr($callback, 2);
-
-				$hook = new $class();
-				$hook->params = $params;
-				$hook->tags = $tags;
-			}
-			else
-			{
-				$hook = new Hook($callback, $params, $tags);
-			}
-
-			self::$hooks[$ns . '/' . $name] = $hook;
+			self::$hooks[$name] = $hook = new Hook($callback, $params, $tags);
 		}
 
 		return $hook;
 	}
 
 	public $callback;
-	public $params = array();
-	public $tags = array();
+	public $params = [];
+	public $tags = [];
 
-	public function __construct($callback, array $params=array(), array $tags=array())
+	public function __construct($callback, array $params=[], array $tags=[])
 	{
 		$this->callback = $callback;
 		$this->params = $params;

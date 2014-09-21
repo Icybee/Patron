@@ -9,4 +9,13 @@
  * file that was distributed with this source code.
  */
 
+namespace Patron;
+
 require __DIR__ . '/../vendor/autoload.php';
+
+$config = require __DIR__ . '/../config/hooks.php';
+
+foreach ($config['patron.markups'] as $name => $definition)
+{
+	Hook::add($name, $definition);
+}
