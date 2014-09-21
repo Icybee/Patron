@@ -285,9 +285,13 @@ class Evaluator
 
 	protected function evaluate($context, $expression, $tokens, $silent, $previous_identifier='__context__')
 	{
+		$expression_path = [];
+
 		foreach ($tokens as $i => $part)
 		{
 			$identifier = $part[self::TOKEN_VALUE];
+
+			$expression_path[] = $identifier;
 
 			switch ($part[self::TOKEN_TYPE])
 			{
@@ -318,11 +322,10 @@ class Evaluator
 							return;
 						}
 
-						throw new \Exception(\ICanBoogie\format('%identifier of expression %expression does not exists in %var (defined: :keys) in: :value', [
+						throw new ReferenceError(\ICanBoogie\format('Reference to undefined property %path of expression %expression (defined: :keys) in: :value', [
 
-							'identifier' => $identifier,
+							'path' => implode('.', $expression_path),
 							'expression' => $expression,
-							'var' => $previous_identifier,
 							'keys' => implode(', ', $context instanceof Context ? $context->keys() : array_keys((array) $context)),
 							'value' => \ICanBoogie\dump($context)
 

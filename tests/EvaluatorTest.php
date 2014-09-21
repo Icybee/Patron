@@ -6,10 +6,17 @@ use BlueTihi\Context;
 
 class EvaluatorTest extends \PHPUnit_Framework_TestCase
 {
-	public function test_get_null_value()
+	static private $evaluator;
+
+	static public function setupBeforeClass()
 	{
 		$engine = new Engine;
-		$evaluator = new Evaluator($engine);
+		self::$evaluator = new Evaluator($engine);
+	}
+
+	public function test_get_null_value()
+	{
+		$evaluator = self::$evaluator;
 		$context = new Context([
 
 			'value' => null
@@ -19,5 +26,20 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
 		$this->assertNull($evaluator([ 'value' => null ], 'value'));
 		$this->assertNull($evaluator((object) [ 'value' => null ], 'value'));
 		$this->assertNull($evaluator($context, 'value'));
+	}
+
+	/**
+	 * @expectedException Patron\ReferenceError
+	 */
+	public function test_get_undefined_value()
+	{
+		$evaluator = self::$evaluator;
+		$context = new Context([
+
+			'one' => [ 'two' => [ 'three' => [] ] ]
+
+		]);
+
+		$evaluator($context, 'one.two.three.four.madonna()');
 	}
 }
