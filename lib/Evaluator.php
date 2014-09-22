@@ -425,12 +425,12 @@ class Evaluator
 
 					if (!$callback)
 					{
-						throw new Exception('Unknown method %method for expression %expression.', [
+						throw new \Exception(\ICanBoogie\format('Unknown method %method for expression %expression.', [
 
 							'%method' => $method,
 							'%expression' => $expression
 
-						]);
+						]));
 					}
 
 					#
