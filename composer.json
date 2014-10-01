@@ -32,5 +32,13 @@
 		},
 		"classmap": [ "lib/markdown/", "lib/textmark/" ],
 		"files": [ "lib/helpers.php" ]
+	},
+
+	"extra": {
+
+		"icanboogie": {
+
+			"config-path": "config"
+		}
 	}
 }
