@@ -47,14 +47,14 @@ class ControlNode extends Node
 		}
 		catch (\Exception $e)
 		{
-			$engine->error('Unknown markup %name', array('%name' => $name));
+			$engine->error('Unknown markup %name', [ '%name' => $name ]);
 
 			return;
 		}
 
 		$args = $this->args;
 
-		$missing = array();
+		$missing = [];
 		$binding = empty($hook->tags['no-binding']);
 
 		foreach ($hook->params as $param => $options)
@@ -97,8 +97,6 @@ class ControlNode extends Node
 			}
 			else
 			{
-				//\ICanBoogie\log('options is a value: \1', array($options));
-
 				if (!array_key_exists($param, $args))
 				{
 					$args[$param] = $options;
@@ -136,7 +134,7 @@ class ControlNode extends Node
 				}
 				else
 				{
-					$arg = $engine($arg->nodes); // FIXME-20121226: this should be $arg($engine, $context)
+					$arg = $engine($arg->nodes);
 				}
 			}
 		}
@@ -147,17 +145,18 @@ class ControlNode extends Node
 		# call hook
 		#
 
-		$engine->trace_enter(array('markup', $name));
+		$engine->trace_enter([ 'markup', $name ]);
 
 		if ($binding)
 		{
-			array_push($engine->context_markup, array($engine->context['self'], $engine->context['this']));
+			array_push($engine->context_markup, [ $engine->context['self'], $engine->context['this'] ]);
 
-			$engine->context['self'] = array
-			(
+			$engine->context['self'] = [
+
 				'name' => $name,
 				'arguments' => $args
-			);
+
+			];
 		}
 
 		$rc = null;

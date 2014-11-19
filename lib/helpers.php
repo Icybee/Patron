@@ -20,9 +20,10 @@ function tr($str, $from, $to)
  * Initialize the parser and return the result of its publish method.
  *
  * @param $template
+ *
  * @return string The template published
  */
-function render($template, $thisArg=null, array $options=array())
+function render($template, $thisArg=null, array $options=[])
 {
 	static $engine;
 
@@ -31,16 +32,15 @@ function render($template, $thisArg=null, array $options=array())
 		$engine = new Engine;
 	}
 
-// 	return Patron\Engine::get_singleton('Icybee')->__invoke($template, $bind, $options);
+	return $engine($template, $thisArg, $options);
 }
-
 
 function by_columns(array $array, $columns, $pad=false)
 {
 	$values_by_columns = ceil(count($array) / $columns);
 
 	$i = 0;
-	$by_columns = array();
+	$by_columns = [];
 
 	foreach ($array as $value)
 	{

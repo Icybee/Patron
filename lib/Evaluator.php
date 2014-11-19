@@ -95,8 +95,6 @@ class Evaluator
 
 			if ($c == '\\')
 			{
-				//echo "found escape: [$c] @$i<br />";
-
 				$escape = true;
 
 				continue;
@@ -106,8 +104,6 @@ class Evaluator
 			{
 				if ($quote && $quote == $c)
 				{
-					//echo "found closing quote: [$c]<br />";
-
 					$quote = null;
 					$quote_closed = $c;
 
@@ -118,8 +114,6 @@ class Evaluator
 				}
 				else if (!$quote)
 				{
-					//echo "found opening quote: [$c]<br />";
-
 					$quote = $c;
 
 					if ($function)
@@ -142,11 +136,6 @@ class Evaluator
 
 			if ($c == '.')
 			{
-				//echo "end of part: [$part]<br />";
-
-				// FIXME: added strlen() because of '0' e.g. items.0.price
-				// could a part be null ??
-
 				if (strlen($part))
 				{
 					$parts[] = [
@@ -164,8 +153,6 @@ class Evaluator
 
 			if ($c == '(')
 			{
-				//echo "function [$part] begin: @$i<br />";
-
 				$function = $part;
 
 				$args = [];
@@ -178,14 +165,10 @@ class Evaluator
 
 			if (($c == ',' || $c == ')') && $function)
 			{
-				//echo "function push argument [$part] q=[$quote_closed]<br />";
-
 				if ($part !== null)
 				{
 					if ($quote_closed == '`')
 					{
-						//echo "we should evaluate [$part][$args_count]<br />";
-
 						$args_evaluate[] = $args_count;
 					}
 
@@ -238,8 +221,6 @@ class Evaluator
 							}
 							break;
 						}
-
-						//\ICanBoogie\log('part: [\1] == [\2]', $part_back, $part);
 					}
 
 					$args[] = $part;
@@ -258,8 +239,6 @@ class Evaluator
 
 			if ($c == ')' && $function)
 			{
-				//echo "function end: [$part] @$i<br />";
-
 				$parts[] = [
 
 					self::TOKEN_TYPE => self::TOKEN_TYPE_FUNCTION,

@@ -61,13 +61,11 @@ class Engine
 			return ($a + $b);
 		};
 
-		$this->addFunction('try', array($this, '_get_try'));
+		$this->addFunction('try', [ $this, '_get_try' ]);
 
 		#
 		# some operations
 		#
-
-		//FIXME: add more operators
 
 		$this->addFunction('if', function($a, $b, $c=null) { return $a ? $b : $c; });
 		$this->addFunction('or', function($a, $b) { return $a ? $a : $b; });
@@ -114,7 +112,6 @@ class Engine
 		 */
 
 		$this->addFunction('first', function($a, $n=null) { $rc = array_slice($a, 0, $n ? $n : 1); return $n === null ? array_shift($rc) : $rc; });
-
 		// TODO-20100507: add the 'last' method
 
 		#
@@ -199,17 +196,6 @@ class Engine
 			return $try;
 		}
 
-		#
-		# 'wd' pseudo namespace // COMPAT
-		#
-
-		$try = 'wd_' . str_replace('-', '_', $name);
-
-		if (function_exists($try))
-		{
-			return $try;
-		}
-
 		$try = 'Patron\\' . $name;
 
 		if (function_exists($try))
@@ -217,23 +203,6 @@ class Engine
 			return $try;
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	private static $singleton;
 
@@ -266,8 +235,8 @@ class Engine
 	**
 	*/
 
-	protected $trace = array();
-	protected $errors = array();
+	protected $trace = [];
+	protected $errors = [];
 
 	public function trace_enter($a)
 	{
@@ -279,7 +248,7 @@ class Engine
 		array_shift($this->trace);
 	}
 
-	public function error($alert, array $args=array())
+	public function error($alert, array $args=[])
 	{
 		if ($alert instanceof \ICanBoogie\Exception\Config)
 		{
@@ -354,7 +323,7 @@ class Engine
 	{
 		$rc = implode(PHP_EOL, $this->errors);
 
-		$this->errors = array();
+		$this->errors = [];
 
 		return $rc;
 	}
@@ -385,7 +354,7 @@ class Engine
 	**
 	*/
 
-	protected $templates = array();
+	protected $templates = [];
 
 	public function addTemplate($name, $template)
 	{
@@ -448,14 +417,14 @@ class Engine
 		return $this->resolve_template($name);
 	}
 
-	public function callTemplate($name, array $args=array())
+	public function callTemplate($name, array $args=[])
 	{
 		$template = $this->get_template($name);
 
 		if (!$template)
 		{
 			$er = 'Unknown template %name';
-			$params = array('%name' => $name);
+			$params = [ '%name' => $name ];
 
 			if ($this->templates)
 			{
@@ -523,7 +492,7 @@ class Engine
 		return $compiler($template);
 	}
 
-	public function __invoke($template, $bind=null, array $options=array())
+	public function __invoke($template, $bind=null, array $options=[])
 	{
 		if (!$template)
 		{
@@ -543,7 +512,10 @@ class Engine
 			{
 				case 'variables':
 				{
-					$this->context = array_merge($this->context, $value);
+					foreach ($value as $k => $v)
+					{
+						$this->context[$k] = $v;
+					}
 				}
 				break;
 
@@ -555,7 +527,12 @@ class Engine
 
 				default:
 				{
-					trigger_error(\ICanBoogie\format('Suspicious option: %option :value', array('%option' => $option, ':value' => $value)));
+					trigger_error(\ICanBoogie\format('Suspicious option: %option :value', [
+
+						'%option' => $option,
+						':value' => $value
+
+					]));
 				}
 				break;
 			}
@@ -591,8 +568,6 @@ class Engine
 			{
 				var_dump($node); continue;
 			}
-
-// 			echo get_class($node) . '//' . is_callable($node) . '<br />';
 
 			try
 			{
@@ -651,7 +626,7 @@ class Engine
 		<p:foreach>
 
 			self.name = foreach
-			self.arguments = array()
+			self.arguments = []
 			self.position
 			self.key
 			self.left

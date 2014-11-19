@@ -17,16 +17,14 @@ class Compiler
 {
 	public function __invoke($template)
 	{
-		$parser = new HTMLParser
-		(
-			array
-			(
-				HTMLParser::T_ERROR_HANDLER => function($message, array $args) {
+		$parser = new HTMLParser([
 
-					throw new \Exception(\ICanBoogie\format($message, $args));
-				}
-			)
-		);
+			HTMLParser::T_ERROR_HANDLER => function($message, array $args) {
+
+				throw new \Exception(\ICanBoogie\format($message, $args));
+			}
+
+		]);
 
 		$tree = $parser->parse($template, Engine::PREFIX);
 
@@ -35,13 +33,13 @@ class Compiler
 
 	protected function parse_html_tree(array $tree)
 	{
-		$nodes = array();
+		$nodes = [];
 
 		foreach ($tree as $node)
 		{
 			if (is_array($node))
 			{
-				$children = array();
+				$children = [];
 
 				if (isset($node['children']))
 				{
@@ -93,7 +91,7 @@ class Compiler
 
 	protected function parse_html_node($node)
 	{
-		$nodes = array();
+		$nodes = [];
 		$parts = preg_split(ExpressionNode::REGEX, $node, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		foreach ($parts as $i => $part)
@@ -126,16 +124,22 @@ class Compiler
 		$type = $matches[2];
 		$expression = $matches[3];
 
-		$types = array
-		(
+		$types = [
+
 			'' => 'Patron\EvaluateNode',
 			't' => 'Patron\TranslateNode',
 			'url' => 'Patron\URLNode'
-		);
+
+		];
 
 		if (!isset($types[$type]))
 		{
-			throw new \Exception(\ICanBoogie\format("Unknown expression type %type for expression %expression", array('type' => $type, 'expression' => $expression)));
+			throw new \Exception(\ICanBoogie\format("Unknown expression type %type for expression %expression", [
+
+				'type' => $type,
+				'expression' => $expression
+
+			]));
 		}
 
 		$class = $types[$type];
@@ -207,15 +211,15 @@ class URLNode extends ExpressionNode
 {
 	protected function render($expression)
 	{
-		global $core;
+		$app = \ICanBoogie\app();
 
-		if (isset($core->routes[$expression]))
+		if (isset($app->routes[$expression]))
 		{
-			$route = $core->routes[$expression];
+			$route = $app->routes[$expression];
 
 			return $route->url;
 		}
 
-		return $core->site->resolve_view_url($expression);
+		return $app->site->resolve_view_url($expression);
 	}
 }

@@ -18,21 +18,22 @@ class HTMLParser
 	private $encoding;
 	private $matches;
 	private $escaped;
-	private $opened = array();
+	private $opened = [];
 
 	protected $error_handler;
 	protected $namespace;
 
-	public function __construct(array $tags=array())
+	public function __construct(array $tags=[])
 	{
-		$tags += array
-		(
+		$tags += [
+
 			self::T_ERROR_HANDLER => function($str, $args) {
 
 				trigger_error(\ICanBoogie\format($str, $args));
 
 			}
-		);
+
+		];
 
 		$this->error_handler = $tags[self::T_ERROR_HANDLER];
 	}
@@ -92,13 +93,13 @@ class HTMLParser
 		# here we escape comments
 		#
 
-		$html = preg_replace_callback('#<\!--.+-->#sU', array($this, 'escapeSpecials_callback'), $html);
+		$html = preg_replace_callback('#<\!--.+-->#sU', [ $this, 'escapeSpecials_callback' ], $html);
 
 		#
 		# and processing options
 		#
 
-		$html = preg_replace_callback('#<\?.+\?>#sU', array($this, 'escapeSpecials_callback'), $html);
+		$html = preg_replace_callback('#<\?.+\?>#sU', [ $this, 'escapeSpecials_callback' ], $html);
 
 		return $html;
 	}
@@ -111,8 +112,8 @@ class HTMLParser
 
 		$text = str_replace
 		(
-			array('<', '>'),
-			array("\x01", "\x02"),
+			[ '<', '>' ],
+			[ "\x01", "\x02" ],
 			$text
 		);
 
@@ -121,17 +122,17 @@ class HTMLParser
 
 	protected function unescapeSpecials($tree)
 	{
-		return is_array($tree) ? array_map(array($this, 'unescapeSpecials'), $tree) : str_replace
+		return is_array($tree) ? array_map([ $this, 'unescapeSpecials' ], $tree) : str_replace
 		(
-			array("\x01", "\x02"),
-			array('<', '>'),
+			[ "\x01", "\x02" ],
+			[ '<', '>' ],
 			$tree
 		);
 	}
 
 	protected function buildTree()
 	{
-		$nodes = array();
+		$nodes = [];
 
 		$i = 0;
 		$text = null;
@@ -234,7 +235,7 @@ class HTMLParser
 		# transform the matches into a nice key/value array
 		#
 
-		$args = array();
+		$args = [];
 
 		foreach ($matches as $m)
 		{
@@ -245,7 +246,7 @@ class HTMLParser
 			$args[$m[1]] = html_entity_decode($m[2], ENT_QUOTES, $this->encoding);
 		}
 
-		return array('name' => $name, 'args' => $args);
+		return [ 'name' => $name, 'args' => $args ];
 	}
 
 	protected function error($markup, $expected)
@@ -256,16 +257,17 @@ class HTMLParser
 		(
 			$this->error_handler, $expected
 			? 'unexpected closing markup %markup, should be %expected'
-			: 'unexpected closing markup %markup, when none was opened', array
-			(
+			: 'unexpected closing markup %markup, when none was opened', [
+
 				'%markup' => $this->namespace . $markup, '%expected' => $expected
-			)
+
+			]
 		);
 	}
 
 	static public function collectMarkup($nodes, $markup)
 	{
-		$collected = array();
+		$collected = [];
 
 		foreach ($nodes as $node)
 		{

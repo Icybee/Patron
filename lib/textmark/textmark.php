@@ -677,9 +677,7 @@ EOT;
 
 		if (!$module)
 		{
-			global $core;
-
-			$module = $core->modules['images'];
+			$module = \ICanBoogie\app()->modules['images'];
 		}
 
 		//		echo l('<pre>in \1: \2</pre>', __FUNCTION__, $matches);

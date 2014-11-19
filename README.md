@@ -1,6 +1,6 @@
 # Patron [![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=1.3)](https://travis-ci.org/Icybee/Patron)
 
-__Patron__ is a template engine for PHP5.3+. It facilitates a mangeable way to seperate application
+__Patron__ is a template engine for PHP5.4+. It facilitates a mangeable way to seperate application
 logic and content from its presentation. Templates are usually written in HTML and include keywords
 that are replaced as the template is parsed, and special markups that control the logic of the
 template or fetch data.
@@ -48,7 +48,7 @@ A typical example:
 
 ## Variables
 
-Variables are outputed with the `#{<expression>}` notation, where `<expression>` is an
+Variables are outputted with the `#{<expression>}` notation, where `<expression>` is an
 expression. They are escaped unless the `=` modifier is used:
 
 ```html
@@ -359,16 +359,10 @@ The package requires PHP 5.4 or later.
 
 ## Installation
 
-The recommended way to install this package is through [Composer](http://getcomposer.org/).
-Create a `composer.json` file and run `php composer.phar install` command to install it:
+The recommended way to install this package is through [Composer](http://getcomposer.org/):
 
-```json
-{
-	"minimum-stability": "dev",
-	"require": {
-		"icybee/patron": "1.3"
-	}
-}
+```
+$ composer require icybee/patron
 ```
 
 The following packages are required, you might want to check them out:
@@ -384,7 +378,7 @@ The following packages are required, you might want to check them out:
 The package is [available on GitHub](https://github.com/Icybee/Patron), its repository can
 be cloned with the following command line:
 
-	$ git clone git://github.com/Icybee/Patron.git
+	$ git clone https://github.com/Icybee/Patron.git
 
 
 

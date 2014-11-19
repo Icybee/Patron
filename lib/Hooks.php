@@ -60,17 +60,15 @@ class Hooks
 			}
 		}
 
-		$pager = new Pager
-		(
-			'div', array
-			(
-				Pager::T_COUNT => $count,
-				Pager::T_LIMIT => $limit,
-				Pager::T_POSITION => $page,
-				Pager::T_NO_ARROWS => $noarrows,
-				Pager::T_WITH => $with
-			)
-		);
+		$pager = new Pager('div', [
+
+			Pager::T_COUNT => $count,
+			Pager::T_LIMIT => $limit,
+			Pager::T_POSITION => $page,
+			Pager::T_NO_ARROWS => $noarrows,
+			Pager::T_WITH => $with
+
+		]);
 
 		return $template ? $patron($template, $pager) : (string) $pager;
 	}
@@ -179,14 +177,15 @@ class Hooks
 		$even = 'even';
 		$key = null;
 
-		$context = array
-		(
+		$context = [
+
 			'count' => &$count,
 			'position' => &$position,
 			'left' => &$left,
 			'even' => &$even,
 			'key' => &$key
-		);
+
+		];
 
 		$as = $args['as'];
 
@@ -322,7 +321,7 @@ class Hooks
 
 			if ($name != 'when')
 			{
-				return $patron->error('Unexpected child: :node', array(':node' => $node));
+				return $patron->error('Unexpected child: :node', [ ':node' => $node ]);
 			}
 
 			$value = $patron->evaluate($node->args['test'], true);

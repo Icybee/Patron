@@ -41,11 +41,9 @@ class Hook
 
 	static public function find($name)
 	{
-		global $core;
-
 		if (!self::$hooks)
 		{
-			self::$hooks = $core->configs->synthesize('hooks', __CLASS__ . '::config_constructor');
+			self::$hooks = \ICanBoogie\app()->configs->synthesize('hooks', __CLASS__ . '::config_constructor');
 		}
 
 		if (empty(self::$hooks[$name]))
