@@ -4,116 +4,129 @@ namespace Patron;
 
 $hooks = __NAMESPACE__ . '\Hooks::';
 
-return array
-(
-	'patron.markups' => array
-	(
+return [
+
+	'patron.markups' => [
+
 		/*
 		 * controls
 		 */
 
-		'template' => array
-		(
-			$hooks . 'markup_template', array
-			(
-				'name' => array('required' => true)
-			),
+		'template' => [
+
+			$hooks . 'markup_template', [
+
+				'name' => [ 'required' => true ]
+
+			],
 
 			'no-binding' => true
-		),
 
-		'call-template' => array
-		(
-			$hooks . 'markup_call_template', array
-			(
-				'name' => array('required' => true)
-			),
+		],
+
+		'call-template' => [
+
+			$hooks . 'markup_call_template', [
+
+				'name' => [ 'required' => true ]
+
+			],
 
 			'no-binding' => true
-		),
 
-		'decorate' => array
-		(
-			$hooks . 'markup_decorate', array
-			(
-				'with' => array('required' => true)
-			)
-		),
+		],
 
-		'foreach' => array
-		(
-			$hooks . 'markup_foreach', array
-			(
-				'in' => array('default' => 'this', 'expression' => true),
+		'decorate' => [
+
+			$hooks . 'markup_decorate', [
+
+				'with' => [ 'required' => true ]
+
+			]
+		],
+
+		'foreach' => [
+
+			$hooks . 'markup_foreach', [
+
+				'in' => [ 'default' => 'this', 'expression' => true ],
 				'as' => null
-			)
-		),
 
-		'variable' => array
-		(
-			$hooks . 'markup_variable', array
-			(
-				'name' => array('required' => true),
-				'select' => array('expression' => true)
-			),
+			]
+		],
 
-			'no-binding' => true
-		),
+		'variable' => [
 
-		'with' => array
-		(
-			$hooks . 'markup_with', array
-			(
-				'select' => array('expression' => true)
-			)
-		),
+			$hooks . 'markup_variable', [
 
-		'choose' => array
-		(
-			$hooks . 'markup_choose', array
-			(
+				'name' => [ 'required' => true ],
+				'select' => [ 'expression' => true ]
 
-			),
+			],
 
 			'no-binding' => true
-		),
+		],
 
-		'if' => array
-		(
-			$hooks . 'markup_if', array
-			(
-				'test' => array('expression' => array('silent' => true)),
-				'select' => array('expression' => array('silent' => true)),
+		'with' => [
+
+			$hooks . 'markup_with', [
+
+				'select' => [ 'expression' => true ]
+
+			]
+		],
+
+		'choose' => [
+
+			$hooks . 'markup_choose', [
+
+
+			],
+
+			'no-binding' => true
+
+		],
+
+		'if' => [
+
+			$hooks . 'markup_if', [
+
+				'test' => [ 'expression' => [ 'silent' => true ] ],
+				'select' => [ 'expression' => [ 'silent' => true ] ],
 				'equals' => null
-			),
+
+			],
 
 			'no-binding' => true
-		),
 
-		'translate' => array
-		(
-			$hooks . 'markup_translate', array
-			(
-				'native' => array('required' => true)
-			)
-		),
+		],
+
+		'translate' => [
+
+			$hooks . 'markup_translate', [
+
+				'native' => [ 'required' => true ]
+
+			]
+		],
 
 		/*
 		 * Brickrouge
 		 */
 
-		'pager' => array
-		(
-			$hooks . 'markup_pager', array
-			(
+		'pager' => [
+
+			$hooks . 'markup_pager', [
+
 				'count' => null,
 				'page' => null,
 				'limit' => null,
 				'with' => null,
-				'range' => array('expression' => true),
+				'range' => [ 'expression' => true ],
 				'noarrows' => false
-			)
-		),
+
+			]
+		],
 
 		'document:css' => [
 
@@ -134,5 +147,5 @@ return array
 
 			]
 		]
-	)
-);
+	]
+];

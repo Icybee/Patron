@@ -54,7 +54,7 @@ expression. They are escaped unless the `=` modifier is used:
 ```html
 #{@title}
 #{@title.shuffle()}   <!-- `title` is passed to str_shuffle() -->
-#{@title=}            <!-- `title` is not escaped -->
+#{@title=}			<!-- `title` is not escaped -->
 ```
 
 
@@ -75,10 +75,10 @@ Provides a simple if-then conditionality.
 
 ```html
 <p:if
-    test = expression
-    select = expression
-    equals = value>
-    <!-- Content: p:with-param*, template -->
+	test = expression
+	select = expression
+	equals = value>
+	<!-- Content: p:with-param*, template -->
 </p:if>
 ```
 
@@ -104,16 +104,16 @@ Selects one among a number of possible alternatives.
 ```html
 <!-- Category: instruction -->
 <p:choose>
-    <!-- Content: (p:when+, p:otherwise?) -->
+	<!-- Content: (p:when+, p:otherwise?) -->
 </p:choose>
 
 <p:when
-    test = boolean-expression>
-    <!-- Content: template -->
+	test = boolean-expression>
+	<!-- Content: template -->
 </p:when>
 
 <p:otherwise>
-    <!-- Content: template -->
+	<!-- Content: template -->
 </p:otherwise>
 ```
 
@@ -137,9 +137,9 @@ Applies a template to each entries of the provided array.
 
 ```html
 <p:foreach
-    in = expression | this
-    as = qname | this>
-    <!-- Content: p:with-param*, template -->
+	in = expression | this
+	as = qname | this>
+	<!-- Content: p:with-param*, template -->
 </p:foreach>
 ```
 
@@ -163,16 +163,16 @@ Binds a name to a value.
 <!-- Category: top-level-element -->
 <!-- Category: instruction -->
 <p:variable
-    name = qname
-    select = expression>
-    <!-- Content: p:with-param*, template? -->
+	name = qname
+	select = expression>
+	<!-- Content: p:with-param*, template? -->
 </p:variable>
 
 <!-- Category: top-level-element -->
 <p:param
-    name = qname
-    select = expression>
-    <!-- Content: template? -->
+	name = qname
+	select = expression>
+	<!-- Content: template? -->
 </p:param>
 ```
 
@@ -203,8 +203,8 @@ Parses a template with a bounded value.
 
 ```html
 <p:with
-    select = expression>
-    <!-- Content: p:with-param*, template -->
+	select = expression>
+	<!-- Content: p:with-param*, template -->
 </p:with>
 ```
 
@@ -226,8 +226,8 @@ Decorates a content with a template.
 
 ```html
 <p:decorate
-    with = string>
-    <!-- Content: p:with-param*, template -->
+	with = string>
+	<!-- Content: p:with-param*, template -->
 </p:decorate>
 ```
 
@@ -245,7 +245,7 @@ are made available as variables in the decorating template.
 
 ```html
 <p:decorate with="page">
-     <p:page:content id="body" />
+	 <p:page:content id="body" />
 </p:decorate>
 ```
 
@@ -270,8 +270,8 @@ Adds a template.
 
 ```html
 <p:template
-    name = qname>
-    <!-- Content: p:with-param*, template -->
+	name = qname>
+	<!-- Content: p:with-param*, template -->
 </p:template>
 ```
 
@@ -288,8 +288,8 @@ Calls a template.
 
 ```html
 <p:call-template
-    name = qname>
-    <!-- Content: p:with-param* -->
+	name = qname>
+	<!-- Content: p:with-param* -->
 </p:call-template>
 ```
 
@@ -303,8 +303,8 @@ Translates and interpolates a string.
 
 ```html
 <p:translate
-    native = string>
-    <!-- Content: p:with-param* -->
+	native = string>
+	<!-- Content: p:with-param* -->
 </p:translate>
 ```
 
@@ -315,8 +315,8 @@ Example:
 
 ```html
 <p:translate native="Posted on :date by !name">
-    <p:with-param name="date"><time datetime="#{@date}" pubdate="pubdate">#{@date.format_date()}</time></p:with-param>
-    <p:with-param name="name" select="@user.name" />
+	<p:with-param name="date"><time datetime="#{@date}" pubdate="pubdate">#{@date.format_date()}</time></p:with-param>
+	<p:with-param name="name" select="@user.name" />
 </p:translate>
 ```
 
@@ -375,9 +375,9 @@ otherwise the collection is rendered into an HTML string of `SCRIPT` elements.
 
 ```html
 <p:document:js
-    href = string
-    weight = int>
-    <!-- Content: p:with-params, template? -->
+	href = string
+	weight = int>
+	<!-- Content: p:with-params, template? -->
 </p:document:js>
 ```
 
