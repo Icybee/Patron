@@ -522,4 +522,110 @@ class Hooks
 
 		return $engine->callTemplate('@' . $template_name, $args);
 	}
+
+	/*
+	 * Brickrouge
+	 */
+
+	/**
+	 * CSS assets can be collected and rendered into `LINK` elements with the `p:document:css`
+	 * element. The `href` attribute is used to add an asset to the collection. The `weight`
+	 * attribute specifies the weight of that asset. If the `weight` attribute is not specified,
+	 * the weight of the asset is defaulted to 100. If the `href` attribute is not specified,
+	 * the assets are rendered. If a template is specified the collection is passed as `this`,
+	 * otherwise the collection is rendered into an HTML string of `LINK` elements.
+	 *
+	 * <pre>
+	 * <p:document:css
+	 *     href = string
+	 *     weight = int>
+	 *     <!-- Content: p:with-params, template? -->
+	 * </p:document:css>
+	 * </pre>
+	 *
+	 * Example:
+	 *
+	 * <pre>
+	 * <p:document:css href="/public/page.css" />
+	 * <p:document:css href="/public/reset.css" weight="-100" />
+	 * <p:document:css />
+	 * </pre>
+	 *
+	 * will produce:
+	 *
+	 * <pre>
+	 * <link href="/public/reset.css" type="text/css" rel="stylesheet" />
+	 * <link href="/public/page.css" type="text/css" rel="stylesheet" />
+	 * </pre>
+	 *
+	 * @param array $args
+	 * @param Engine $engine
+	 * @param mixed $template
+	 *
+	 * @return void|string
+	 */
+	static public function markup_document_css(array $args, Engine $engine, $template)
+	{
+		$document = \Brickrouge\get_document();
+
+		if (isset($args['href']))
+		{
+			$document->css->add($args['href'], $args['weight'], dirname($engine->get_file()));
+
+			return;
+		}
+
+		return $template ? $engine($template, $document->css) : (string) $document->css;
+	}
+
+	/**
+	 * JavaScript assets can be collected and rendered into `SCRIPT` elements with the `p:document:js`
+	 * element. The `href` attribute is used to add an asset to the collection. The `weight`
+	 * attribute specifies the weight of that asset. If the `weight` attribute is not specified,
+	 * the weight of the asset is defaulted to 100. If the `href` attribute is not specified,
+	 * the assets are rendered. If a template is specified the collection is passed as `this`,
+	 * otherwise the collection is rendered into an HTML string of `SCRIPT` elements.
+	 *
+	 * <pre>
+	 * <p:document:js
+	 *     href = string
+	 *     weight = int>
+	 *     <!-- Content: p:with-params, template? -->
+	 * </p:document:js>
+	 * </pre>
+	 *
+	 * Example:
+	 *
+	 * <pre>
+	 * <p:document:js href="/public/page.js" />
+	 * <p:document:js href="/public/reset.js" weight="-100" />
+	 * <p:document:js />
+	 * </pre>
+	 *
+	 * will produce:
+	 *
+	 * <pre>
+	 * <script src="/public/reset.css" type="text/javascript"></script>
+	 * <script src="/public/page.css" type="text/javascript"></script>
+	 * </pre>
+	 *
+	 * @param array $args
+	 * @param Engine $engine
+	 * @param mixed $template
+	 *
+	 * @return void|string
+	 */
+	static public function markup_document_js(array $args, Engine $engine, $template)
+	{
+		$document = \Brickrouge\get_document();
+
+		if (isset($args['href']))
+		{
+			$document->js->add($args['href'], $args['weight'], dirname($engine->get_file()));
+
+			return;
+		}
+
+		return $template ? $engine($template, $document->js) : (string) $document->js;
+	}
 }

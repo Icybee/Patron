@@ -99,7 +99,7 @@ return array
 		),
 
 		/*
-		 * elements
+		 * Brickrouge
 		 */
 
 		'pager' => array
@@ -113,6 +113,26 @@ return array
 				'range' => array('expression' => true),
 				'noarrows' => false
 			)
-		)
+		),
+
+		'document:css' => [
+
+			$hooks . 'markup_document_css', [
+
+				'href' => null,
+				'weight' => 100
+
+			]
+		],
+
+		'document:js' => [
+
+			$hooks . 'markup_document_js', [
+
+				'href' => null,
+				'weight' => 100
+
+			]
+		]
 	)
 );

@@ -324,19 +324,97 @@ Example:
 
 
 
+### The `p:document:css` markup
+
+CSS assets can be collected and rendered into `LINK` elements with the `p:document:css`
+element. The `href` attribute is used to add an asset to the collection. The `weight`
+attribute specifies the weight of that asset. If the `weight` attribute is not specified,
+the weight of the asset is defaulted to 100. If the `href` attribute is not specified,
+the assets are rendered. If a template is specified the collection is passed as `this`,
+otherwise the collection is rendered into an HTML string of `LINK` elements.
+
+**Note:** This markup requires the [brickrouge/brickrouge][] package.
+
+```html
+<p:document:css
+	href = string
+	weight = int>
+	<!-- Content: p:with-params, template? -->
+</p:document:css>
+```
+
+Example:
+
+```html
+<p:document:css href="/public/page.css" />
+<p:document:css href="/public/reset.css" weight="-100" />
+<p:document:css />
+```
+
+will produce:
+
+```html
+<link href="/public/reset.css" type="text/css" rel="stylesheet" />
+<link href="/public/page.css" type="text/css" rel="stylesheet" />
+```
+
+
+
+
+
+### The `p:document:js` markup
+
+JavaScript assets can be collected and rendered into `SCRIPT` elements with the `p:document:js`
+element. The `href` attribute is used to add an asset to the collection. The `weight`
+attribute specifies the weight of that asset. If the `weight` attribute is not specified,
+the weight of the asset is defaulted to 100. If the `href` attribute is not specified,
+the assets are rendered. If a template is specified the collection is passed as `this`,
+otherwise the collection is rendered into an HTML string of `SCRIPT` elements.
+
+**Note:** This markup requires the [brickrouge/brickrouge][] package.
+
+```html
+<p:document:js
+    href = string
+    weight = int>
+    <!-- Content: p:with-params, template? -->
+</p:document:js>
+```
+
+Example:
+
+```html
+<p:document:js href="/public/page.js" />
+<p:document:js href="/public/reset.js" weight="-100" />
+<p:document:js />
+```
+
+will produce:
+
+```html
+<script src="/public/reset.css" type="text/javascript"></script>
+<script src="/public/page.css" type="text/javascript"></script>
+```
+
+
+
+
+
 ### The `p:pager` markup
 
 Renders a page element.
 
+**Note:** This markup requires the [brickrouge/brickrouge][] package.
+
 ```html
 <p:pager
-    count = int
-    page = int
-    limit = int
-    with = string
-    range = expression
-    noarrows = boolean>
-    <!-- Content: p:with-param*, template? -->
+	count = int
+	page = int
+	limit = int
+	with = string
+	range = expression
+	noarrows = boolean>
+	<!-- Content: p:with-param*, template? -->
 </p:pager>
 ```
 
@@ -411,3 +489,5 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 ## License
 
 This package is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
+
+[brickrouge/brickrouge]: https://github.com/Brickrouge/Brickrouge

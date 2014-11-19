@@ -1,7 +1,7 @@
 {
 	"name": "icybee/patron",
 	"type": "library",
-	"description": "A HTML template engine for PHP5.3+",
+	"description": "A HTML template engine",
 	"keywords": ["engine", "template", "html"],
 	"homepage": "https://github.com/Icybee/Patron",
 	"license": "BSD-3-Clause",
@@ -23,7 +23,8 @@
 		"icybee/bluetihi": ">=0.0.2"
 	},
 	"suggest": {
-		"icanboogie/i18n": "Required to use the translation notation and markup."
+		"icanboogie/i18n": "Required to use the translation notation and markup.",
+		"brickrouge/brickrouge": "Required to use p:pager, p:document:css, and p:document:js"
 	},
 	"autoload": {
 		"psr-4": {
