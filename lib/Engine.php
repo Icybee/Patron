@@ -118,7 +118,7 @@ class Engine
 		#
 		#
 
-		$this->addFunction('markdown', function($txt) { require_once __DIR__ . '/../textmark.php'; return Markdown($txt); });
+		$this->addFunction('markdown', function($txt) { require_once __DIR__ . '/textmark/textmark.php'; return Markdown($txt); });
 	}
 
 	/**
