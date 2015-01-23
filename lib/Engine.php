@@ -566,7 +566,7 @@ class Engine
 		{
 			if (!($node instanceof Node))
 			{
-				var_dump($node); continue;
+				continue;
 			}
 
 			try
