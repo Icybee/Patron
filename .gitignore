@@ -1,4 +1,5 @@
 .README.md.html
+.idea
 composer.lock
 docs
 vendor
