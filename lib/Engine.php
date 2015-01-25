@@ -14,6 +14,8 @@ namespace Patron;
 use ICanBoogie\Debug;
 
 use Brickrouge\Alert;
+use ICanBoogie\Render;
+use ICanBoogie\Render\TemplateName;
 
 define('WDPATRON_DELIMIT_MACROS', false);
 
@@ -41,6 +43,7 @@ class Engine
 
 		$this->contextInit();
 		$this->evaluator = new Evaluator($this);
+		$this->template_resolver = Render\get_template_resolver();
 
 		#
 		# add functions
@@ -374,29 +377,39 @@ class Engine
 
 	protected function resolve_template($name)
 	{
+		$template_resolver = $this->template_resolver;
 		$file = $this->get_file();
-		$pathname = dirname($file);
 
-		$tries = [
-
-			"{$pathname}/partials/{$name}.html",
-			"{$pathname}/{$name}.html",
-			\ICanBoogie\DOCUMENT_ROOT . "protected/all/templates/partials/{$name}.html",
-			\ICanBoogie\DOCUMENT_ROOT . "protected/all/templates/{$name}.html"
-
-		];
-
-		foreach ($tries as $try)
+		if ($file)
 		{
-			if (!file_exists($try))
-			{
-				continue;
-			}
-
-			return $this->create_template_from_file($try);
+			$template_resolver = clone $this->template_resolver;
+			$template_resolver->add_path(dirname($file));
 		}
 
-		throw new TemplateNotFound($name, $tries);
+		$tries = [];
+		$template_pathname = $template_resolver->resolve($name, [ '.patron', '.html' ], $tries);
+
+		if ($template_pathname)
+		{
+			return $this->create_template_from_file($template_pathname);
+		}
+
+		$template_name = TemplateName::from($name);
+		$template_pathname = $template_resolver->resolve($template_name->as_partial, [ '.patron', '.html' ], $tries);
+
+		if ($template_pathname)
+		{
+			return $this->create_template_from_file($template_pathname);
+		}
+
+		$template_pathname = $template_resolver->resolve($template_name->as_template, [ '.patron', '.html' ], $tries);
+
+		if ($template_pathname)
+		{
+			return $this->create_template_from_file($template_pathname);
+		}
+
+		throw new TemplateNotFound("Template not found: $name.", $tries);
 	}
 
 	protected function create_template_from_file($pathname)
