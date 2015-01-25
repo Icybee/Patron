@@ -13,9 +13,18 @@ namespace Patron;
 
 class PatronTest extends \PHPUnit_Framework_TestCase
 {
+	private $markups;
+
+	public function setup()
+	{
+		$this->markups = $this
+			->getMockBuilder('Patron\MarkupCollection')
+			->getMock();
+	}
+
 	public function test_evaluate()
 	{
-		$engine = new Engine;
+		$engine = new Engine($this->markups);
 		$engine->context['one'] = [ 'two' => [ 'three' => 3 ] ];
 		$this->assertEquals(3, $engine->evaluate('one.two.three'));
 		$this->assertNull($engine->evaluate('one.two.four', true));
@@ -30,5 +39,16 @@ class PatronTest extends \PHPUnit_Framework_TestCase
 		{
 			$this->assertInstanceOf('Patron\ReferenceError', $e);
 		}
+	}
+
+	public function test_undefined_markup()
+	{
+		$template = <<<EOT
+<p:foreach>#{@}</p:foreach>
+EOT;
+
+		$engine = new Engine(new MarkupCollection);
+		$rc = $engine($template);
+		$this->assertContains('MarkupNotDefined', $rc);
 	}
 }

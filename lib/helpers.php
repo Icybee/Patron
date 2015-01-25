@@ -11,31 +11,48 @@
 
 namespace Patron;
 
+/**
+ * @return MarkupCollection
+ */
+function get_markups()
+{
+	static $markups;
+
+	if (!$markups)
+	{
+		$markups = new MarkupCollection(require __DIR__ . '/../res' . DIRECTORY_SEPARATOR . 'markups.php');
+
+		new MarkupCollection\AlterEvent($markups);
+	}
+
+	return $markups;
+}
+
+/**
+ * @return Engine
+ */
+function get_patron()
+{
+	static $patron;
+
+	if (!$patron)
+	{
+		$patron = new Engine(get_markups());
+	}
+
+	return clone $patron;
+}
+
+/*
+ *
+ */
+
 function tr($str, $from, $to)
 {
 	return strtr($str, $from, $to);
 }
 
-/**
- * Initialize the parser and return the result of its publish method.
- *
- * @param $template
- *
- * @return string The template published
- */
-function render($template, $thisArg=null, array $options=[])
-{
-	static $engine;
-
-	if (!$engine)
-	{
-		$engine = new Engine;
-	}
-
-	return $engine($template, $thisArg, $options);
-}
-
-function by_columns(array $array, $columns, $pad=false)
+function by_columns(array $array, $columns)
 {
 	$values_by_columns = ceil(count($array) / $columns);
 

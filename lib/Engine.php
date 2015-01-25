@@ -12,16 +12,36 @@
 namespace Patron;
 
 use ICanBoogie\Debug;
+use ICanBoogie\GetterTrait;
 use ICanBoogie\Render;
 use ICanBoogie\Render\TemplateName;
 
 define('WDPATRON_DELIMIT_MACROS', false);
 
+/**
+ * Patron engine.
+ *
+ * @package Patron
+ *
+ * @property-read MarkupCollection $markups
+ */
 class Engine
 {
+	use GetterTrait;
+
 	const PREFIX = 'p:';
 
 	protected $trace_templates = false;
+
+	/**
+	 * @var MarkupCollection
+	 */
+	private $markups;
+
+	protected function get_markups()
+	{
+		return $this->markups;
+	}
 
 	/**
 	 * Expression evaluator.
@@ -32,9 +52,13 @@ class Engine
 
 	/**
 	 * Initializes the {@link $evaluator} property, and a bunch of functions.
+	 *
+	 * @param MarkupCollection $markups
 	 */
-	public function __construct()
+	public function __construct(MarkupCollection $markups)
 	{
+		$this->markups = $markups;
+
 		#
 		# create context
 		#

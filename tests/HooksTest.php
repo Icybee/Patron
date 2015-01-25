@@ -15,7 +15,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_markup_if()
 	{
-		$engine = new Engine;
+		$engine = get_patron();
 		$template = <<<EOT
 <p:if test="undefined">
 FAILURE
@@ -26,7 +26,7 @@ EOT;
 
 	public function test_markup_choose()
 	{
-		$engine = new Engine;
+		$engine = get_patron();
 		$template = <<<EOT
 <p:choose>
 	<p:when test="undefined">FAILURE</p:when>

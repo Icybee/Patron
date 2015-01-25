@@ -422,7 +422,50 @@ Renders a page element.
 
 
 
+## Markup collection
+
+The markups that can be used by a _Patron_ engine instance are defined in a [MarkupCollection][]
+instance, which is used to create the [Engine][] instance. The `get_markups()` helper
+function can be used to obtain a shared markup collection. When it is first created, the
+`MarkupCollection::alter` event of class [MarkupCollection\AlterEvent][] is fired. Event hooks
+may use this event to alter the collection, adding and removing markups definitions.
+
+The following example demonstrates how an event hook may be used to add a `hello` markup, that
+supports a `name` argument which defaults to "world":
+
+```php
+<?php
+
+use Patron\Engine;
+use Patron\MarkupCollection;
+
+$app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollection $collection) {
+
+	$collection['hello'] = [ function(array $args, Engine $engine, $template) {
+	
+		return "Hello {$args['name']}!";
+	
+	}, [ 'name' => "world" ] ];
+
+});
+```
+
+
+
+
+
+## Event hooks
+
+- `ICanBoogie\Core::boot`: This event is used to set an event hook on the
+`Patron\MarkupCollection::alter` event in order to add to the markup collection the markups
+defined in the `patron.markups` config.
+
+
+
+
+
 ----------
+
 
 
 
@@ -491,3 +534,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 This package is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
 
 [brickrouge/brickrouge]: https://github.com/Brickrouge/Brickrouge
+
+[Engine][]: lib/Engine.php
+[MarkupCollection][]: lib/MarkupCollection.php
+[MarkupCollection\AlterEvent]: lib/MarkupCollection/AlterEvent.php

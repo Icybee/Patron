@@ -15,17 +15,22 @@ use BlueTihi\Context;
 
 class EvaluatorTest extends \PHPUnit_Framework_TestCase
 {
-	static private $evaluator;
+	private $evaluator;
 
-	static public function setupBeforeClass()
+	public function setup()
 	{
-		$engine = new Engine;
-		self::$evaluator = new Evaluator($engine);
+		/* @var $markups \Patron\MarkupCollection */
+		$markups = $this
+			->getMockBuilder('Patron\MarkupCollection')
+			->getMock();
+
+		$engine = new Engine($markups);
+		$this->evaluator = new Evaluator($engine);
 	}
 
 	public function test_get_null_value()
 	{
-		$evaluator = self::$evaluator;
+		$evaluator = $this->evaluator;
 		$context = new Context([
 
 			'value' => null
@@ -38,11 +43,11 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException Patron\ReferenceError
+	 * @expectedException \Patron\ReferenceError
 	 */
 	public function test_get_undefined_value()
 	{
-		$evaluator = self::$evaluator;
+		$evaluator = $this->evaluator;
 		$context = new Context([
 
 			'one' => [ 'two' => [ 'three' => [] ] ]
@@ -54,7 +59,7 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
 
 	public function test_get_undefined_value_silent()
 	{
-		$evaluator = self::$evaluator;
+		$evaluator = $this->evaluator;
 		$context = new Context([
 
 			'one' => [ 'two' => [ 'three' => [] ] ]

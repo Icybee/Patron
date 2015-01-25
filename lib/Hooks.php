@@ -12,6 +12,8 @@
 namespace Patron;
 
 use Brickrouge\Pager;
+
+use ICanBoogie\Core;
 use ICanBoogie\Render\TemplateName;
 
 class Hooks
@@ -628,5 +630,45 @@ class Hooks
 		}
 
 		return $template ? $engine($template, $document->js) : (string) $document->js;
+	}
+
+	/*
+	 * ICanBoogie
+	 */
+
+	/**
+	 * Synthesizes the "patron.markups" config.
+	 *
+	 * @param array $fragments
+	 *
+	 * @return array
+	 */
+	static public function synthesize_markups_config(array $fragments)
+	{
+		$markups = [];
+
+		foreach ($fragments as $path => $fragment)
+		{
+			if (empty($fragment['patron.markups']))
+			{
+				continue;
+			}
+
+			$markups = array_merge($markups, $fragment['patron.markups']);
+		}
+
+		return $markups;
+	}
+
+	static public function on_core_boot(Core\BootEvent $event, Core $app)
+	{
+		$app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollection $markups) use ($app) {
+
+			foreach((array) $app->configs['patron.markups'] as $name => $definition)
+			{
+				$markups[$name] = $definition + [ 1 => [ ] ];
+			}
+
+		});
 	}
 }

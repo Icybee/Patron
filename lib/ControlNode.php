@@ -41,23 +41,14 @@ class ControlNode extends Node
 	{
 		$name = $this->name;
 
-		try
-		{
-			$hook = Hook::find($name);
-		}
-		catch (\Exception $e)
-		{
-			$engine->error('Unknown markup %name', [ '%name' => $name ]);
-
-			return;
-		}
+		list($callback, $params) = $engine->markups[$name];
 
 		$args = $this->args;
 
 		$missing = [];
-		$binding = empty($hook->tags['no-binding']);
+		$binding = empty($params['no-binding']);
 
-		foreach ($hook->params as $param => $options)
+		foreach ($params as $param => $options)
 		{
 			if (is_array($options))
 			{
@@ -163,7 +154,7 @@ class ControlNode extends Node
 
 		try
 		{
-			$rc = $hook($args, $engine, $this->nodes);
+			$rc = call_user_func($callback, $args, $engine, $this->nodes);
 		}
 		catch (\Exception $e)
 		{

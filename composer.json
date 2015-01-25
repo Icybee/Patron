@@ -36,10 +36,11 @@
 	},
 
 	"extra": {
-
 		"icanboogie": {
-
-			"config-path": "config"
+			"config-path": "config",
+			"config-constructor": {
+				"patron.markups": "Patron\\Hooks::synthesize_markups_config#hooks"
+			}
 		}
 	}
 }
