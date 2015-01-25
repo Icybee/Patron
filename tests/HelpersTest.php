@@ -22,6 +22,37 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(isset($markups['foreach']));
 	}
 
+	public function test_get_functions()
+	{
+		$functions = get_functions();
+
+		$this->assertInstanceOf('Patron\FunctionCollection', $functions);
+		$this->assertSame($functions, get_functions());
+		$this->assertTrue(isset($functions['to_s']));
+	}
+
+	public function test_function_markdown()
+	{
+		$template = <<<EOT
+- one
+- two
+- three
+EOT;
+
+		$expected = <<<EOT
+<ul>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ul>
+
+EOT;
+
+		$functions = get_functions();
+
+		$this->assertEquals($expected, $functions['markdown']($template));
+	}
+
 	public function test_get_patron()
 	{
 		$patron = get_patron();

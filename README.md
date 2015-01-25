@@ -1,11 +1,15 @@
 # Patron [![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=master)](https://travis-ci.org/Icybee/Patron)
 
-__Patron__ is a template engine for PHP5.4+. It facilitates a mangeable way to seperate application
-logic and content from its presentation. Templates are usually written in HTML and include keywords
-that are replaced as the template is parsed, and special markups that control the logic of the
-template or fetch data.
+__Patron__ is a template engine for PHP5.4+. It facilitates the separation of the application
+logic and content from its presentation. Templates are written in HTML and include expressions
+that are replaced as the template is parsed, and special markups that control the logic of
+the template.
 
-A typical example:
+
+
+
+
+### A typical example
 
 ```html
 <p:articles limit="10">
@@ -37,33 +41,78 @@ A typical example:
 </p:articles>
 ```
 
-## Features
 
-* The markup set is easily extensible.
-* Blocks have a scope, similar to `this` in javascript.
+
+
+
+### Features
+
+* The markup set and the function set are easily extensible.
+* Blocks have a _subject_, similar to how `this` works in javascript.
 * Easy to translate using the `#{t:String to translate}` notation.
 
 
 
 
-## Variables
 
-Variables are outputted with the `#{<expression>}` notation, where `<expression>` is an
-expression. They are escaped unless the `=` modifier is used:
+### Acknowledgment
+
+This template engine was developed because around 2007 [textpattern](http://textpattern.com/)
+didn't support nested markups, and I though it would be a good exercise. Some part of its code
+have slept for a long time, so don't be surprise if you see some camel casing although snake
+casing is used nearly everywhere, at least you'll recognize the _old_ parts :-)
+
+
+
+
+
+## Expressions
+
+Expressions, using the `#{<expression>}` notation, are used to output data. The data is always
+escaped unless the `=` modifier is used, just before the closing `}`. The `@` sign is used
+to access the properties of the _subject_ (although you can also use `this`).
 
 ```html
 #{@title}
 #{@title.shuffle()}   <!-- `title` is passed to str_shuffle() -->
-#{@title=}			<!-- `title` is not escaped -->
+#{@title=}            <!-- `title` is not escaped -->
+
+#{pagination=}        <!-- another variable that is not escaped -->
 ```
 
 
 
 
 
-## Markups
+## Markup collection
 
-The package defines the following markups, that can be used within templates.
+The markups that can be used by a _Patron_ engine instance are defined in a [MarkupCollection][]
+instance, which is used to create the [Engine][] instance. The `get_markups()` helper
+function can be used to obtain a shared markup collection. When it is first created, the
+`MarkupCollection::alter` event of class [MarkupCollection\AlterEvent][] is fired. Event hooks
+may use this event to alter the collection, adding and removing markups definitions.
+
+The following example demonstrates how an event hook may be used to add a `hello` markup, that
+supports a `name` argument which defaults to "world":
+
+```php
+<?php
+
+use Patron\Engine;
+use Patron\MarkupCollection;
+
+$app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollection $collection) {
+
+	$collection['hello'] = [ function(array $args, Engine $engine, $template) {
+
+		return "Hello {$args['name']}!";
+
+	}, [ 'name' => "world" ] ];
+
+});
+```
+
+The following markups are defined.
 
 
 
@@ -84,8 +133,6 @@ Provides a simple if-then conditionality.
 
 Either `test` or `select` and an operator (e.g. `equals`) should be defined. The test is silent,
 and should not generate notices.
-
-#### Example
 
 ```html
 <p:if test="@has_title">This article has a title</p:if>
@@ -186,8 +233,6 @@ place of the default values.
 Both `p:variable` and `p:with-param` have a required name attribute, which specifies the
 name of the variable. The value of the name attribute is a qualified name.
 
-#### Example
-
 ```html
 <p:variable name="count" select="@comments_count" />
 <p:variable name="count">There are #{@comments_count} comments</p:variable>
@@ -207,8 +252,6 @@ Parses a template with a bounded value.
 	<!-- Content: p:with-param*, template -->
 </p:with>
 ```
-
-#### Example
 
 ```html
 <p:with select="articles.first().comments.last()">
@@ -240,8 +283,6 @@ are used, which ever comes first.
 
 The parameters specified using `with-param`, as well as the attribute of the markup (except `with`)
 are made available as variables in the decorating template.
-
-#### Example
 
 ```html
 <p:decorate with="page">
@@ -422,33 +463,100 @@ Renders a page element.
 
 
 
-## Markup collection
+## Function collection
 
-The markups that can be used by a _Patron_ engine instance are defined in a [MarkupCollection][]
-instance, which is used to create the [Engine][] instance. The `get_markups()` helper
-function can be used to obtain a shared markup collection. When it is first created, the
-`MarkupCollection::alter` event of class [MarkupCollection\AlterEvent][] is fired. Event hooks
-may use this event to alter the collection, adding and removing markups definitions.
+The functions that can be used by a _Patron_ engine instance are defined in a
+[FunctionCollection][] instance, which is used to create the [Engine][] instance.
+The `get_functions()` helper function can be used to obtain a shared markup collection. When it
+is first created, the `FunctionCollection::alter` event of class [FunctionCollection\AlterEvent][]
+is fired. Event hooks may use this event to alter the collection, adding and removing functions.
 
-The following example demonstrates how an event hook may be used to add a `hello` markup, that
-supports a `name` argument which defaults to "world":
+The following example demonstrates how an event hook may be used to add a `hello` function:
 
 ```php
 <?php
 
 use Patron\Engine;
-use Patron\MarkupCollection;
+use Patron\FunctionCollection;
 
-$app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollection $collection) {
+$app->events->attach(function(FunctionCollection\AlterEvent $event, FunctionCollection $collection) {
 
-	$collection['hello'] = [ function(array $args, Engine $engine, $template) {
-	
-		return "Hello {$args['name']}!";
-	
-	}, [ 'name' => "world" ] ];
+	$collection['hello'] = function($name="world") {
+
+		return "Hello $name!";
+
+	};
 
 });
 ```
+
+The following functions are defined by default:
+
+- `if`: Returns _b_ if _a_ is truthy, _c_ otherwise.
+- `or`: Returns _a_ if truthy, _b_ otherwise.
+- `not`: Returns negate value.
+- `mod`: A mod of two values.
+- `bit`: Check is a bit is defined.
+- `greater`: Checks that _a_ is greater than _b_.
+- `smaller`: Checks that _a_ is smaller than _b_.
+- `equals`: Checks that _a_ equals _b_.
+- `different`: Checks that _a_ is different than _b_.
+- `add`: Adds two value together.
+- `minus`: Subtracts a value from another.
+- `plus`: Adds two value together.
+- `times`: Multiplies a value.
+- `by`: Divide a value.
+- `split`: Splits a string into an array.
+- `joint`: Joins an array into a string.
+- `index`: Returns the value at a specified index.
+- `first`: Returns the first element, or the first n elements, of an array.
+- `to_s`: Converts a value into a string.
+- `replace`: Replace a string.
+- `markdown`: Transforms a string into HTML using _Markdown_.
+
+
+
+
+
+### Finding a function
+
+The `find()` method is used to find a function in the collection, it may also check functions
+that are defined outside of the collection, such as PHP functions.
+
+```php
+<?php
+
+echo $functions->find('boot'); // ICanBoogie\boot
+```
+
+
+
+
+
+### Executing a function
+
+You can used the `find()` method to find a function than use the returned value to call the
+function, or you can directly call the function like it is a method of [FunctionCollection][].
+
+```php
+<?php
+
+use Patron\FunctionCollection;
+
+$functions = new FunctionCollection([
+
+	'hello' => function($name = "world") {
+	 
+	    return "Hello $name!";
+	 
+	 }
+
+]);
+
+echo $functions->hello("Olivier"); // Hello Olivier!
+```
+
+The [FunctionNotDefined][] exception is thrown if the function called is not defined.
 
 
 
@@ -456,9 +564,9 @@ $app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollecti
 
 ## Event hooks
 
-- `ICanBoogie\Core::boot`: This event is used to set an event hook on the
-`Patron\MarkupCollection::alter` event in order to add to the markup collection the markups
-defined in the `patron.markups` config.
+- `ICanBoogie\Core::boot`: This event is used to attaches event hooks to
+`MarkupCollection::alter` and `FunctionCollection::alter` in order to add the markups and
+functions defined in the `patron.markups` and `patron.function` configs.
 
 
 
@@ -489,6 +597,7 @@ $ composer require icybee/patron
 The following packages are required, you might want to check them out:
 
 * [icanboogie/common](https://packagist.org/packages/icanboogie/common)
+* [icanboogie/render](https://packagist.org/packages/icanboogie/render)
 
 
 
@@ -535,6 +644,10 @@ This package is licensed under the New BSD License - See the [LICENSE](LICENSE) 
 
 [brickrouge/brickrouge]: https://github.com/Brickrouge/Brickrouge
 
-[Engine][]: lib/Engine.php
-[MarkupCollection][]: lib/MarkupCollection.php
+[Engine]: lib/Engine.php
+[FunctionCollection]: lib/FunctionCollection.php
+[FunctionCollection\AlterEvent]: lib/FunctionCollection/AlterEvent.php
+[FunctionNotDefined]: lib/FunctionNotDefined.php
+[MarkupCollection]: lib/MarkupCollection.php
 [MarkupCollection\AlterEvent]: lib/MarkupCollection/AlterEvent.php
+[MarkupNotDefined]: lib/MarkupNotDefined.php

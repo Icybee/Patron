@@ -24,6 +24,7 @@ define('WDPATRON_DELIMIT_MACROS', false);
  * @package Patron
  *
  * @property-read MarkupCollection $markups
+ * @property-read FunctionCollection $functions
  */
 class Engine
 {
@@ -44,6 +45,16 @@ class Engine
 	}
 
 	/**
+	 * @var FunctionCollection
+	 */
+	private $functions;
+
+	protected function get_functions()
+	{
+		return $this->functions;
+	}
+
+	/**
 	 * Expression evaluator.
 	 *
 	 * @var Evaluator
@@ -54,96 +65,21 @@ class Engine
 	 * Initializes the {@link $evaluator} property, and a bunch of functions.
 	 *
 	 * @param MarkupCollection $markups
+	 * @param FunctionCollection $functions
 	 */
-	public function __construct(MarkupCollection $markups)
+	public function __construct(MarkupCollection $markups, FunctionCollection $functions)
 	{
 		$this->markups = $markups;
-
-		#
-		# create context
-		#
-
-		$this->contextInit();
+		$this->functions = $functions;
 		$this->evaluator = new Evaluator($this);
 		$this->template_resolver = Render\get_template_resolver();
 
-		#
-		# add functions
-		#
+		$this->init_context();
+	}
 
-		$this->functions['to_s'] = function($a)
-		{
-			if (is_array($a) || (is_object($a) && !method_exists($a, '__toString')))
-			{
-				return \ICanBoogie\dump($a);
-			}
-
-			return (string) $a;
-		};
-
-		$this->functions['add'] = function($a,$b)
-		{
-			return ($a + $b);
-		};
-
-		$this->addFunction('try', [ $this, '_get_try' ]);
-
-		#
-		# some operations
-		#
-
-		$this->addFunction('if', function($a, $b, $c=null) { return $a ? $b : $c; });
-		$this->addFunction('or', function($a, $b) { return $a ? $a : $b; });
-		$this->addFunction('not', function($a) { return !$a; });
-		$this->addFunction('mod', function($a, $b) { return $a % $b; });
-		$this->addFunction('bit', function($a, $b) { return (int) $a & (1 << $b); });
-
-		$this->addFunction('greater', function($a, $b) { return ($a > $b); });
-		$this->addFunction('smaller', function($a, $b) { return ($a < $b); });
-		$this->addFunction('equals', function($a, $b) { return ($a == $b); });
-		$this->addFunction('different', function($a, $b) { return ($a != $b); });
-
-		#
-		# maths
-		#
-
-		$this->addFunction('minus', function($a, $b) { return $a - $b; });
-		$this->addFunction('plus', function($a, $b) { return $a + $b; });
-		$this->addFunction('times', function($a, $b) { return $a * $b; });
-		$this->addFunction('by', function($a, $b) { return $a / $b; });
-
-		#
-		#
-		#
-
-		$this->addFunction('split', function($a, $b=",") { return explode($b,$a); });
-		$this->addFunction('join', function($a, $b=",") { return implode($b,$a); });
-		$this->addFunction('index', function() { $a = func_get_args(); $i = array_shift($a); return $a[$i]; });
-		$this->addFunction('replace', function($a, $b, $c="") { return str_replace($b, $c, $a); });
-
-		#
-		# array (mostly from ruby)
-		#
-
-		/**
-		 * Returns the first element, or the first n elements, of the array. If the array is empty,
-		 * the first form returns nil, and the second form returns an empty array.
-		 *
-		 * a = [ "q", "r", "s", "t" ]
-		 * a.first    // "q"
-		 * a.first(1) // ["q"]
-		 * a.first(3) // ["q", "r", "s"]
-		 *
-		 */
-
-		$this->addFunction('first', function($a, $n=null) { $rc = array_slice($a, 0, $n ? $n : 1); return $n === null ? array_shift($rc) : $rc; });
-		// TODO-20100507: add the 'last' method
-
-		#
-		#
-		#
-
-		$this->addFunction('markdown', function($txt) { require_once __DIR__ . '/textmark/textmark.php'; return Markdown($txt); });
+	public function __clone()
+	{
+		$this->init_context();
 	}
 
 	/**
@@ -160,96 +96,14 @@ class Engine
 		return $evaluator($context ?: $this->context, $expression, $silent);
 	}
 
-
-
-
-
-
-
-	protected $functions = [];
-
-	public function addFunction($name, $callback)
-	{
-		#
-		# FIXME-20080203: should check overrides
-		#
-
-		$this->functions[$name] = $callback;
-	}
-
-	public function findFunction($name)
-	{
-		/*
-		// TODO: move to Engine
-
-		$hook = null;
-
-		try
-		{
-			$hook = Hook::find('patron.functions', $name);
-		}
-		catch (\Exception $e) { }
-
-		if ($hook)
-		{
-			return $hook;
-		}
-		*/
-
-		// /
-
-		#
-		#
-		#
-
-		if (isset($this->functions[$name]))
-		{
-			return $this->functions[$name];
-		}
-
-		$try = 'ICanBoogie\\' . $name;
-
-		if (function_exists($try))
-		{
-			return $try;
-		}
-
-		$try = 'ICanBoogie\I18n\\' . $name;
-
-		if (function_exists($try))
-		{
-			return $try;
-		}
-
-		$try = 'Patron\\' . $name;
-
-		if (function_exists($try))
-		{
-			return $try;
-		}
-	}
-
-	private static $singleton;
-
+	/**
+	 * @return Engine
+	 *
+	 * @deprecated
+	 */
 	static public function get_singleton()
 	{
-		if (self::$singleton)
-		{
-			return self::$singleton;
-		}
-
-		$class = get_called_class();
-
-		self::$singleton = $singleton = new $class();
-
-		return $singleton;
-	}
-
-	public function _get_try($from, $which, $default=null)
-	{
-		$form = (array) $from;
-
-		return isset($from[$which]) ? $from[$which] : $default;
+		return get_patron();
 	}
 
 	/*
@@ -445,6 +299,14 @@ class Engine
 		return $this->resolve_template($name);
 	}
 
+	/**
+	 * Calls a template.
+	 *
+	 * @param $name
+	 * @param array $args
+	 *
+	 * @return string
+	 */
 	public function callTemplate($name, array $args=[])
 	{
 		$template = $this->get_template($name);
@@ -462,21 +324,12 @@ class Engine
 
 			$this->error($er, $params);
 
-			return;
+			return null;
 		}
 
 		$this->trace_enter([ 'template', $name, $template ]);
 
-		if (version_compare(PHP_VERSION, '5.3.4', '>='))
-		{
-			$this->context['self']['arguments'] = $args;
-		}
-		else // COMPAT
-		{
-			$self = $this->context['self'];
-			$self['arguments'] = $args;
-			$this->context['self'] = $self;
-		}
+		$this->context['self']['arguments'] = $args;
 
 		$rc = $this($template);
 
@@ -495,7 +348,7 @@ class Engine
 
 	public $context;
 
-	protected function contextInit()
+	protected function init_context()
 	{
 		$this->context = new \BlueTihi\Context([ 'self' => null, 'this' => null ]);
 	}
@@ -524,7 +377,7 @@ class Engine
 	{
 		if (!$template)
 		{
-			return;
+			return null;
 		}
 
 		if ($bind !== null)
@@ -636,7 +489,7 @@ class Engine
 	# $context_markup is used to keep track of two variables associated with each markup :
 	# self and this.
 	#
-	# 'self' is a reference to the markup itsef, holding its name and the arguments with which
+	# 'self' is a reference to the markup itself, holding its name and the arguments with which
 	# it was called, it is also used to store special markup data as for the foreach markup
 	#
 	# 'this' is a reference to the object of the markup, that being an array, an object or a value

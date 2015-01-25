@@ -343,7 +343,7 @@ class Evaluator
 					# we check internal functions
 					#
 
-					$callback = $this->engine->findFunction($method);
+					$callback = $this->engine->functions->find($method);
 
 					#
 					# if no internal function matches, we try string and array functions

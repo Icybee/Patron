@@ -13,18 +13,30 @@ namespace Patron;
 
 class PatronTest extends \PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var MarkupCollection
+	 */
 	private $markups;
+
+	/**
+	 * @var FunctionCollection
+	 */
+	private $functions;
 
 	public function setup()
 	{
 		$this->markups = $this
 			->getMockBuilder('Patron\MarkupCollection')
 			->getMock();
+
+		$this->functions = $this
+			->getMockBuilder('Patron\FunctionCollection')
+			->getMock();
 	}
 
 	public function test_evaluate()
 	{
-		$engine = new Engine($this->markups);
+		$engine = new Engine($this->markups, $this->functions);
 		$engine->context['one'] = [ 'two' => [ 'three' => 3 ] ];
 		$this->assertEquals(3, $engine->evaluate('one.two.three'));
 		$this->assertNull($engine->evaluate('one.two.four', true));
@@ -47,8 +59,39 @@ class PatronTest extends \PHPUnit_Framework_TestCase
 <p:foreach>#{@}</p:foreach>
 EOT;
 
-		$engine = new Engine(new MarkupCollection);
+		$engine = new Engine(new MarkupCollection, $this->functions);
 		$rc = $engine($template);
 		$this->assertContains('MarkupNotDefined', $rc);
+	}
+
+	public function test_function()
+	{
+		$template = <<<EOT
+#{@hello()}
+EOT;
+
+		$engine = new Engine($this->markups, new FunctionCollection([
+
+			'hello' => function($name = "world") {
+
+				return "Hello $name!";
+
+			}
+
+		]));
+
+		$rc = $engine($template, "Olivier");
+		$this->assertEquals('Hello Olivier!', $rc);
+	}
+
+	public function test_undefined_function()
+	{
+		$template = <<<EOT
+#{@undefined()}
+EOT;
+
+		$engine = new Engine($this->markups, new FunctionCollection);
+		$rc = $engine($template, [ "1", "2", "3" ]);
+		$this->assertContains('Unknown method', $rc);
 	}
 }

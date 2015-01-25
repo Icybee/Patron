@@ -29,6 +29,23 @@ function get_markups()
 }
 
 /**
+ * @return FunctionCollection
+ */
+function get_functions()
+{
+	static $functions;
+
+	if (!$functions)
+	{
+		$functions = new FunctionCollection(require __DIR__ . '/../res' . DIRECTORY_SEPARATOR . 'functions.php');
+
+		new FunctionCollection\AlterEvent($functions);
+	}
+
+	return $functions;
+}
+
+/**
  * @return Engine
  */
 function get_patron()
@@ -37,7 +54,7 @@ function get_patron()
 
 	if (!$patron)
 	{
-		$patron = new Engine(get_markups());
+		$patron = new Engine(get_markups(), get_functions());
 	}
 
 	return clone $patron;

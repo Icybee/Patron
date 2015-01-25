@@ -41,6 +41,13 @@ class Hooks
 	 */
 	static public function markup_pager(array $args, Engine $patron, $template)
 	{
+		$count = null;
+		$limit = null;
+		$page =  null;
+		$range = null;
+		$noarrows = null;
+		$with = null;
+
 		extract($args);
 
 		if (!$range)
@@ -154,7 +161,7 @@ class Hooks
 
 		if (!$entries)
 		{
-			return;
+			return null;
 		}
 
 		if (!is_array($entries) && !is_object($entries))
@@ -167,7 +174,7 @@ class Hooks
 				)
 			);
 
-			return;
+			return null;
 		}
 
 		#
@@ -239,16 +246,16 @@ class Hooks
 	 * @param Engine $patron
 	 * @param mixed $template
 	 *
-	 * @throws Exception when both `test` and `select` are defined.
+	 * @return string
+	 *
+	 * @throws \Exception when both `test` and `select` are defined.
 	 */
 	static public function markup_if(array $args, Engine $patron, $template)
 	{
 		if (isset($args['test']) && isset($args['select']))
 		{
-			throw new Exception("Ambiguous test. Both <q>test</q> and <q>select</q> are defined.");
+			throw new \Exception("Ambiguous test. Both <q>test</q> and <q>select</q> are defined.");
 		}
-
-		$true = false;
 
 		if ($args['equals'] !== null)
 		{
@@ -263,10 +270,7 @@ class Hooks
 		# if the evaluation is not empty (0 or ''), we publish the template
 		#
 
-		if ($true)
-		{
-			return $patron($template);
-		}
+		return $true ? $patron($template) : null;
 	}
 
 	/**
@@ -301,6 +305,8 @@ class Hooks
 	 * @param array $args
 	 * @param Engine $patron
 	 * @param mixed $template
+	 *
+	 * @return string
 	 */
 	static public function markup_choose(array $args, Engine $patron, $template)
 	{
@@ -324,7 +330,9 @@ class Hooks
 
 			if ($name != 'when')
 			{
-				return $patron->error('Unexpected child: :node', [ ':node' => $node ]);
+				$patron->error('Unexpected child: :node', [ ':node' => $node ]);
+
+				return null;
 			}
 
 			$value = $patron->evaluate($node->args['test'], true);
@@ -341,7 +349,7 @@ class Hooks
 
 		if (!$otherwise)
 		{
-			return;
+			return null;
 		}
 
 		return $patron($otherwise->nodes);
@@ -387,6 +395,8 @@ class Hooks
 	 * @param array $args
 	 * @param Engine $patron
 	 * @param mixed $template
+	 *
+	 * @return string
 	 */
 	static public function markup_variable(array $args, Engine $patron, $template)
 	{
@@ -394,7 +404,9 @@ class Hooks
 
 		if ($select && $template)
 		{
-			return $patron->error('Ambiguous selection');
+			$patron->error('Ambiguous selection');
+
+			return null;
 		}
 		else if ($select)
 		{
@@ -431,12 +443,16 @@ class Hooks
 	 * @param array $args
 	 * @param Engine $patron
 	 * @param mixed $template
+	 *
+	 * @return string
 	 */
 	static public function markup_with(array $args, Engine $patron, $template)
 	{
 		if ($template === null)
 		{
-			return $patron->error('A template is required.');
+			$patron->error('A template is required.');
+
+			return null;
 		}
 
 		$select = $args['select'];
@@ -469,6 +485,8 @@ class Hooks
 	 * @param array $args
 	 * @param Engine $patron
 	 * @param mixed $template
+	 *
+	 * @return string
 	 */
 	static public function markup_translate(array $args, Engine $patron, $template)
 	{
@@ -507,6 +525,8 @@ class Hooks
 	 * @param array $args
 	 * @param Engine $engine
 	 * @param mixed $template
+	 *
+	 * @return string
 	 */
 	static public function markup_decorate(array $args, Engine $engine, $template)
 	{
@@ -575,7 +595,7 @@ class Hooks
 		{
 			$document->css->add($args['href'], $args['weight'], dirname($engine->get_file()));
 
-			return;
+			return null;
 		}
 
 		return $template ? $engine($template, $document->css) : (string) $document->css;
@@ -626,7 +646,7 @@ class Hooks
 		{
 			$document->js->add($args['href'], $args['weight'], dirname($engine->get_file()));
 
-			return;
+			return null;
 		}
 
 		return $template ? $engine($template, $document->js) : (string) $document->js;
@@ -660,6 +680,38 @@ class Hooks
 		return $markups;
 	}
 
+	/**
+	 * Synthesizes the "patron.functions" config.
+	 *
+	 * @param array $fragments
+	 *
+	 * @return array
+	 */
+	static public function synthesize_functions_config(array $fragments)
+	{
+		$functions = [];
+
+		foreach ($fragments as $path => $fragment)
+		{
+			if (empty($fragment['patron.functions']))
+			{
+				continue;
+			}
+
+			$functions = array_merge($functions, $fragment['patron.functions']);
+		}
+
+		return $functions;
+	}
+
+	/**
+	 * Attaches event hooks to `MarkupCollection::alter` and `FunctionCollection::alter` in order
+	 * to add the markups and functions defined in the `patron.markups` and `patron.function`
+	 * configs.
+	 *
+	 * @param Core\BootEvent $event
+	 * @param Core $app
+	 */
 	static public function on_core_boot(Core\BootEvent $event, Core $app)
 	{
 		$app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollection $markups) use ($app) {
@@ -667,6 +719,15 @@ class Hooks
 			foreach((array) $app->configs['patron.markups'] as $name => $definition)
 			{
 				$markups[$name] = $definition + [ 1 => [ ] ];
+			}
+
+		});
+
+		$app->events->attach(function(FunctionCollection\AlterEvent $event, FunctionCollection $markups) use ($app) {
+
+			foreach((array) $app->configs['patron.functions'] as $name => $definition)
+			{
+				$markups[$name] = $definition;
 			}
 
 		});

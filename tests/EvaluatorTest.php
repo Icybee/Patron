@@ -24,7 +24,12 @@ class EvaluatorTest extends \PHPUnit_Framework_TestCase
 			->getMockBuilder('Patron\MarkupCollection')
 			->getMock();
 
-		$engine = new Engine($markups);
+		/* @var $functions \Patron\FunctionCollection */
+		$functions = $this
+			->getMockBuilder('Patron\FunctionCollection')
+			->getMock();
+
+		$engine = new Engine($markups, $functions);
 		$this->evaluator = new Evaluator($engine);
 	}
 
