@@ -12,6 +12,7 @@
 namespace Patron;
 
 use Brickrouge\Pager;
+use ICanBoogie\Render\TemplateName;
 
 class Hooks
 {
@@ -92,7 +93,7 @@ class Hooks
 	 */
 	static public function markup_template(array $args, Engine $patron, $template)
 	{
-		$patron->addTemplate($args['name'], $template);
+		$patron->addTemplate(TemplateName::from($args['name'])->as_partial, $template);
 	}
 
 	/**
@@ -113,7 +114,7 @@ class Hooks
 	 */
 	static public function markup_call_template(array $args, Engine $patron, $template)
 	{
-		return $patron->callTemplate($args['name'], $args);
+		return $patron->callTemplate(TemplateName::from($args['name'])->as_partial, $args);
 	}
 
 	/**
@@ -488,8 +489,8 @@ class Hooks
 	 * to the decorating template as the `component` variable.
 	 *
 	 * The name of the decorating template is specified with the `with` attribute, and is
-	 * interpolated e.g. if "page" is specified the templates "@page.html" or "partials/@page.html"
-	 * are used, which ever comes first.
+	 * interpolated e.g. if "page" is specified the template name "@page" is used; if "admin/page"
+	 * is specified the template name "admin/@page" is used.
 	 *
 	 * The parameters specified using `with-param` are all turned into variables.
 	 *
@@ -520,7 +521,7 @@ class Hooks
 			$engine->context[$name] = $value;
 		}
 
-		return $engine->callTemplate('@' . $template_name, $args);
+		return $engine->callTemplate(TemplateName::from($template_name)->as_layout, $args);
 	}
 
 	/*

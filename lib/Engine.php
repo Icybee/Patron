@@ -400,13 +400,6 @@ class Engine
 			return $this->create_template_from_file($template_pathname);
 		}
 
-		$template_pathname = $template_resolver->resolve($template_name->as_template, [ '.patron', '.html' ], $tries);
-
-		if ($template_pathname)
-		{
-			return $this->create_template_from_file($template_pathname);
-		}
-
 		throw new TemplateNotFound("Template not found: $name.", $tries);
 	}
 
