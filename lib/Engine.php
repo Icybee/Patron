@@ -12,8 +12,6 @@
 namespace Patron;
 
 use ICanBoogie\Debug;
-
-use Brickrouge\Alert;
 use ICanBoogie\Render;
 use ICanBoogie\Render\TemplateName;
 
@@ -255,7 +253,7 @@ class Engine
 	{
 		if ($alert instanceof \ICanBoogie\Exception\Config)
 		{
-			$this->errors[] = new Alert($alert->getMessage());
+			$this->errors[] = '<div class="alert alert-error alert-danger">' . $alert->getMessage() . '</div>';
 
 			return;
 		}
@@ -305,16 +303,16 @@ class Engine
 		#
 		#
 
-		$this->errors[] = '<div class="alert alert-error">' . $alert . $trace_html . '</div>';
+		$this->errors[] = '<div class="alert alert-error alert-danger">' . $alert . $trace_html . '</div>';
 	}
 
 	public function handle_exception(\Exception $e)
 	{
-		if ($e instanceof \ICanBoogie\HTTP\HTTP\Error)
+		if ($e instanceof \ICanBoogie\HTTP\Exception)
 		{
 			throw $e;
 		}
-		else if ($e instanceof \ICanBoogie\ActiveRecord\ActiveRecordException)
+		else if ($e instanceof \ICanBoogie\ActiveRecord\Exception)
 		{
 			throw $e;
 		}
