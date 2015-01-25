@@ -1,4 +1,4 @@
-# Patron [![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=1.3)](https://travis-ci.org/Icybee/Patron)
+# Patron [![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=master)](https://travis-ci.org/Icybee/Patron)
 
 __Patron__ is a template engine for PHP5.4+. It facilitates a mangeable way to seperate application
 logic and content from its presentation. Templates are usually written in HTML and include keywords
@@ -480,7 +480,7 @@ clean the directory with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=1.3)](https://travis-ci.org/Icybee/Patron)
+[![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=master)](https://travis-ci.org/Icybee/Patron)
 
 
 
