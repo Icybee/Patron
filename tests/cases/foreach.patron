@@ -1,0 +1,10 @@
+===
+<p:foreach>
+this: #{@}
+count: #{self.count}
+position: #{self.position}
+left: #{self.left}
+even: "#{self.even}"
+key: #{self.key}
+</p:foreach>
+---

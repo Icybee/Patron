@@ -11,8 +11,8 @@
 
 namespace Patron;
 
+use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\Debug;
-use ICanBoogie\GetterTrait;
 use ICanBoogie\Render;
 use ICanBoogie\Render\TemplateName;
 
@@ -28,7 +28,7 @@ define('WDPATRON_DELIMIT_MACROS', false);
  */
 class Engine
 {
-	use GetterTrait;
+	use AccessorTrait;
 
 	const PREFIX = 'p:';
 

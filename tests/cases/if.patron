@@ -1,0 +1,6 @@
+===
+<p:if test="@true">TRUE</p:if>
+<p:if test="@true.not()">NOT TRUE</p:if>
+<p:if test="@false">FALSE</p:if>
+<p:if test="@false.not()">NOT FALSE</p:if>
+---

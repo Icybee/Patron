@@ -94,4 +94,39 @@ EOT;
 		$rc = $engine($template, [ "1", "2", "3" ]);
 		$this->assertContains('Unknown method', $rc);
 	}
+
+	/**
+	 * @dataProvider provide_test_cases
+	 *
+	 * @param $base
+	 */
+	public function test_cases($base)
+	{
+		$thisArg = null;
+		$options = [];
+
+		require $base . '.php';
+
+		$template = file_get_contents($base . '.patron');
+		$expected = file_get_contents($base . '.expect');
+		$engine = get_patron();
+		$result = $engine($template, $thisArg, $options);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	public function provide_test_cases()
+	{
+		$di = new \DirectoryIterator(__DIR__ . '/cases');
+		$di = new \RegexIterator($di, '/\.patron$/');
+
+		$cases = [];
+
+		foreach ($di as $file)
+		{
+			$cases[] = [ substr($file->getPathname(), 0, -strlen('.patron')) ];
+		}
+
+		return $cases;
+	}
 }

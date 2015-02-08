@@ -1,0 +1,7 @@
+===
+<p:variable name="count1" select="@comments_count" />
+<p:variable name="count2">There are #{@comments_count} comments</p:variable>
+Count1: #{count1}
+
+Count2: #{count2}
+---
