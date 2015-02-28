@@ -1,5 +1,6 @@
-.README.md.html
 .idea
+.README.md.html
+build/coverage
 composer.lock
 docs
 vendor

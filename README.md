@@ -1,9 +1,14 @@
-# Patron [![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=master)](https://travis-ci.org/Icybee/Patron)
+# Patron
 
-__Patron__ is a template engine for PHP5.4+. It facilitates the separation of the application
-logic and content from its presentation. Templates are written in HTML and include expressions
-that are replaced as the template is parsed, and special markups that control the logic of
-the template.
+[![Release](https://img.shields.io/github/release/Icybee/Patron.svg)](https://github.com/Icybee/Patron/releases)
+[![Build Status](https://img.shields.io/travis/Icybee/Patron.svg)](http://travis-ci.org/Icybee/Patron)
+[![HHVM](https://img.shields.io/hhvm/Icybee/Patron.svg)](http://hhvm.h4cc.de/package/Icybee/Patron)
+[![Code Quality](https://img.shields.io/scrutinizer/g/Icybee/Patron.svg)](https://scrutinizer-ci.com/g/Icybee/Patron)
+[![Code Coverage](https://img.shields.io/coveralls/Icybee/Patron.svg)](https://coveralls.io/r/Icybee/Patron)
+[![Packagist](https://img.shields.io/packagist/dt/Icybee/Patron.svg)](https://packagist.org/packages/Icybee/Patron)
+
+
+__Patron__ is a template engine for PHP5.4+. It facilitates the separation of the application logic and content from its presentation. Templates are written in HTML and include expressions that are replaced as the template is parsed, and special markups that control the logic of the template.
 
 
 
@@ -616,9 +621,8 @@ be cloned with the following command line:
 
 ## Documentation
 
-You can generate the documentation for the package and its dependencies with the `make doc`
-command. The documentation is generated in the `docs` directory. [ApiGen](http://apigen.org/) is
-required. The directory can later be cleaned with the `make clean` command.
+The package is documented as part of the [ICanBoogie][] framework
+[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package and its dependencies with the `make doc` command. The documentation is generated in the `build/docs` directory. [ApiGen](http://apigen.org/) is required. The directory can later be cleaned with the `make clean` command.
 
 
 
@@ -626,13 +630,12 @@ required. The directory can later be cleaned with the `make clean` command.
 
 ## Testing
 
-The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all dependencies required to run the suite. You can later
-clean the directory with the `make clean` command.
+The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and [Composer](http://getcomposer.org/) need to be globally available to run the suite. The command installs dependencies as required. The `make test-coverage` command runs test suite and also creates an HTML coverage report in "build/coverage". The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/Icybee/Patron.svg?branch=master)](https://travis-ci.org/Icybee/Patron)
+[![Build Status](https://img.shields.io/travis/Icybee/Patron.svg)](https://travis-ci.org/Icybee/Patron)
+[![Code Coverage](https://img.shields.io/coveralls/Icybee/Patron.svg)](https://coveralls.io/r/Icybee/Patron)
 
 
 
