@@ -1,6 +1,6 @@
 # Patron
 
-[![Release](https://img.shields.io/github/release/Icybee/Patron.svg)](https://github.com/Icybee/Patron/releases)
+[![Release](https://img.shields.io/packagist/v/icybee/patron.svg)](https://packagist.org/packages/icybee/patron)
 [![Build Status](https://img.shields.io/travis/Icybee/Patron.svg)](http://travis-ci.org/Icybee/Patron)
 [![HHVM](https://img.shields.io/hhvm/Icybee/Patron.svg)](http://hhvm.h4cc.de/package/Icybee/Patron)
 [![Code Quality](https://img.shields.io/scrutinizer/g/Icybee/Patron.svg)](https://scrutinizer-ci.com/g/Icybee/Patron)
