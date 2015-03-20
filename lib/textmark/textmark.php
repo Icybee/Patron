@@ -107,7 +107,7 @@ class Textmark_Parser extends MarkdownExtra_Parser
 				$id = $params['v'];
 
 				$html = <<<EOT
-<iframe class="embed embed--youtube" frameborder="0" src="http://www.youtube.com/embed/$id?controls=2"></iframe>
+<iframe class="embed embed--youtube" frameborder="0" src="https://www.youtube.com/embed/$id?controls=2"></iframe>
 EOT;
 
 				return $this->hashPart($html, 'B');
@@ -135,7 +135,7 @@ EOT;
 			if (preg_match('#vimeo.com/(\d+)#', $url, $matches))
 			{
 				$html = <<<EOT
-<iframe class="embed embed--vimeo" src="http://player.vimeo.com/video/{$matches[1]}?show_title=1&show_byline=1&show_portrait=0&color=F65FB8" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe class="embed embed--vimeo" src="https://player.vimeo.com/video/{$matches[1]}?show_title=1&show_byline=1&show_portrait=0&color=F65FB8" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 EOT;
 
 				return $this->hashPart($html, 'B');
