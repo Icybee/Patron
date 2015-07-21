@@ -258,8 +258,25 @@ class Engine
 
 		if ($file)
 		{
+			// FIXME-20150721: use a decorator
+
 			$template_resolver = clone $this->template_resolver;
-			$template_resolver->add_path(dirname($file));
+
+			$basic_template_resolver = null;
+
+			if ($template_resolver instanceof Render\BasicTemplateResolver)
+			{
+				$basic_template_resolver = $template_resolver;
+			}
+			else if ($template_resolver instanceof Render\TemplateResolverDecorator)
+			{
+				$basic_template_resolver = $template_resolver->find_renderer(Render\BasicTemplateResolver::class);
+			}
+
+			if ($basic_template_resolver)
+			{
+				$basic_template_resolver->add_path(dirname($file));
+			}
 		}
 
 		$tries = [];

@@ -17,10 +17,11 @@
 		"issues": "https://github.com/Icybee/Patron/issues",
 		"source": "https://github.com/Icybee/Patron"
 	},
+	"minimum-stability": "dev",
 	"require": {
-		"php": ">=5.4.0",
+		"php": ">=5.5.0",
 		"icanboogie/common": "~1.2.2",
-		"icanboogie/render": "~0.4.0",
+		"icanboogie/render": "0.5.x-dev",
 		"icybee/bluetihi": ">=0.0.2"
 	},
 	"suggest": {
