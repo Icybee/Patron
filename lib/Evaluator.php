@@ -11,6 +11,8 @@
 
 namespace Patron;
 
+use BlueTihi\Context;
+
 /**
  * Evaluate expression relative to a context.
  */
