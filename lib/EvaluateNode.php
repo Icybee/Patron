@@ -18,7 +18,14 @@ namespace Patron;
  */
 class EvaluateNode extends ExpressionNode
 {
+	/**
+	 * @var Engine
+	 */
 	private $engine;
+
+	/**
+	 * @var array
+	 */
 	private $engine_context;
 
 	public function __invoke(Engine $engine, $context)
