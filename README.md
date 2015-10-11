@@ -191,7 +191,7 @@ Applies a template to each entries of the provided array.
 <p:foreach
 	in = expression | this
 	as = qname | this>
-	<!-- Content: p:with-param*, template -->
+	<!-- Content: p:with-param*, p:empty?, p:wrap?, template -->
 </p:foreach>
 ```
 
@@ -202,6 +202,15 @@ At each turn the following variables are updated in `self`:
 - `left`: The number of entries left.
 - `even`: "even" if the position is even, an empty string otherwise.
 - `key`: The key of the entry.
+
+```html
+<p:foreach in="articles">
+	<p:empty>There is no article yet.</p:empty>
+	<p:wrap><ul>#{@=}</ul></p:wrap>
+	
+	<li>#{self.position}/#{self.count} <a href="#{@url}">#{@title}</a></li>
+</p:foreach>
+```
 
 
 
