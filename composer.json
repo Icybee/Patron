@@ -19,10 +19,10 @@
 	},
 	"minimum-stability": "dev",
 	"require": {
-		"php": ">=5.5.0",
-		"icanboogie/common": "~1.2.2",
-		"icanboogie/render": "0.5.x-dev",
-		"icybee/bluetihi": ">=0.0.2"
+		"php": "^5.5|^7.0",
+		"icanboogie/common": "^1.2",
+		"icanboogie/render": "^0.5",
+		"icybee/bluetihi": "^0.0.3"
 	},
 	"suggest": {
 		"icanboogie/i18n": "Required to use the translation notation and markup.",
