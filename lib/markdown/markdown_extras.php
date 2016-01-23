@@ -3,11 +3,11 @@
 # Markdown Extra  -  A text-to-HTML conversion tool for web writers
 #
 # PHP Markdown & Extra
-# Copyright (c) 2004-2012 Michel Fortin  
+# Copyright (c) 2004-2012 Michel Fortin
 # <http://michelf.com/projects/php-markdown/>
 #
 # Original Markdown
-# Copyright (c) 2004-2006 John Gruber  
+# Copyright (c) 2004-2006 John Gruber
 # <http://daringfireball.net/projects/markdown/>
 #
 
@@ -31,7 +31,7 @@ class MarkdownExtra_Parser extends Markdown_Parser
 	var $predef_abbr = array();
 
 
-	function MarkdownExtra_Parser() {
+	function __construct() {
 	#
 	# Constructor function. Initialize the parser object.
 	#
@@ -57,7 +57,7 @@ class MarkdownExtra_Parser extends Markdown_Parser
 			"doAbbreviations"    => 70,
 			);
 
-		parent::Markdown_Parser();
+		parent::__construct();
 	}
 
 
@@ -292,8 +292,8 @@ class MarkdownExtra_Parser extends Markdown_Parser
 			else if (preg_match('{^\n?[ ]{0,'.($indent+3).'}~}', $tag)) {
 				# Fenced code block marker: find matching end marker.
 				$tag_re = preg_quote(trim($tag));
-				if (preg_match('{^(?>.*\n)+?[ ]{0,'.($indent).'}'.$tag_re.'[ ]*\n}', $text, 
-					$matches)) 
+				if (preg_match('{^(?>.*\n)+?[ ]{0,'.($indent).'}'.$tag_re.'[ ]*\n}', $text,
+					$matches))
 				{
 					# End marker found: pass text unchanged until marker.
 					$parsed .= $tag . $matches[0];
@@ -308,7 +308,7 @@ class MarkdownExtra_Parser extends Markdown_Parser
 			# Check for: Indented code block.
 			#
 			else if ($tag{0} == "\n" || $tag{0} == " ") {
-				# Indented code block: pass it unchanged, will be handled 
+				# Indented code block: pass it unchanged, will be handled
 				# later.
 				$parsed .= $tag;
 			}

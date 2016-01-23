@@ -240,7 +240,7 @@ class Markdown_Parser {
 	var $predef_titles = array();
 
 
-	function Markdown_Parser() {
+	function __construct() {
 	#
 	# Constructor function. Initialize appropriate member variables.
 	#
@@ -1739,7 +1739,7 @@ expected; (3) the output Markdown actually produced.
 
 
 Version History
---------------- 
+---------------
 
 See the readme file for detailed release notes for this version.
 
@@ -1748,13 +1748,13 @@ Copyright and License
 ---------------------
 
 PHP Markdown
-Copyright (c) 2004-2009 Michel Fortin  
-<http://michelf.com/>  
+Copyright (c) 2004-2009 Michel Fortin
+<http://michelf.com/>
 All rights reserved.
 
 Based on Markdown
-Copyright (c) 2003-2006 John Gruber   
-<http://daringfireball.net/>   
+Copyright (c) 2003-2006 John Gruber
+<http://daringfireball.net/>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

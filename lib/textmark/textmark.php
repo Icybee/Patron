@@ -50,7 +50,7 @@ class Textmark_Parser extends MarkdownExtra_Parser
 		return Markdown((string) $str);
 	}
 
-	function Textmark_Parser()
+	function __construct()
 	{
 		$this->early_gamut += array
 		(
@@ -64,7 +64,7 @@ class Textmark_Parser extends MarkdownExtra_Parser
 			'doSpan' => 71
 		);
 
-		parent::MarkdownExtra_Parser();
+		parent::__construct();
 	}
 
 	public function doShell($text)
