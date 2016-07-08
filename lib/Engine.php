@@ -131,7 +131,7 @@ class Engine
 	{
 		if ($alert instanceof \ICanBoogie\Exception\Config)
 		{
-			$this->errors[] = '<div class="alert alert-error alert-danger">' . $alert->getMessage() . '</div>';
+			$this->errors[] = '<div class="alert alert-danger">' . $alert->getMessage() . '</div>';
 
 			return;
 		}
@@ -181,7 +181,7 @@ class Engine
 		#
 		#
 
-		$this->errors[] = '<div class="alert alert-error alert-danger">' . $alert . $trace_html . '</div>';
+		$this->errors[] = '<div class="alert alert-danger">' . $alert . $trace_html . '</div>';
 	}
 
 	public function handle_exception(\Exception $e)
