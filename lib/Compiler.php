@@ -11,10 +11,13 @@
 
 namespace Patron;
 
-use ICanBoogie\I18n;
-
 class Compiler
 {
+	/**
+	 * @param string $template
+	 *
+	 * @return array
+	 */
 	public function __invoke($template)
 	{
 		$parser = new HTMLParser([
@@ -31,6 +34,11 @@ class Compiler
 		return $this->parse_html_tree($tree);
 	}
 
+	/**
+	 * @param array $tree
+	 *
+	 * @return array
+	 */
 	protected function parse_html_tree(array $tree)
 	{
 		$nodes = [];
@@ -89,6 +97,12 @@ class Compiler
 		return $nodes;
 	}
 
+	/**
+	 * @param string $node
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
 	protected function parse_html_node($node)
 	{
 		$nodes = [];
@@ -109,6 +123,12 @@ class Compiler
 		return $nodes;
 	}
 
+	/**
+	 * @param string $source
+	 *
+	 * @return object
+	 * @throws \Exception
+	 */
 	protected function parse_expression($source)
 	{
 		$escape = true;
@@ -145,81 +165,5 @@ class Compiler
 		$class = $types[$type];
 
 		return new $class($expression, $escape);
-	}
-}
-
-abstract class Node
-{
-	abstract public function __invoke(Engine $engine, $context);
-}
-
-class TextNode extends Node
-{
-	protected $text;
-
-	public function __construct($source)
-	{
-		$this->text = $source;
-	}
-
-	public function __invoke(Engine $engine, $context)
-	{
-		return $this->text;
-	}
-}
-
-class ExpressionNode extends Node
-{
-	const REGEX = '~\#\{(?!\s)([^\}]+)\}~';
-
-	protected $expression;
-	protected $escape;
-
-	public function __construct($expression, $escape)
-	{
-		$this->expression = $expression;
-		$this->escape = $escape;
-	}
-
-	public function __invoke(Engine $engine, $context)
-	{
-		$rc = $this->render($this->expression);
-
-		if ($this->escape)
-		{
-			$rc = \ICanBoogie\escape($rc);
-		}
-
-		return $rc;
-	}
-
-	protected function render($expression)
-	{
-		return $expression;
-	}
-}
-
-class TranslateNode extends ExpressionNode
-{
-	protected function render($expression)
-	{
-		return I18n\t($expression);
-	}
-}
-
-class URLNode extends ExpressionNode
-{
-	protected function render($expression)
-	{
-		$app = \ICanBoogie\app();
-
-		if (isset($app->routes[$expression]))
-		{
-			$route = $app->routes[$expression];
-
-			return $route->url;
-		}
-
-		return $app->site->resolve_view_url($expression);
 	}
 }

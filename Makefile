@@ -1,7 +1,7 @@
 # customization
 
 PACKAGE_NAME = "Icybee/Patron"
-PACKAGE_VERSION = v1.3.4
+PACKAGE_VERSION = 1.4
 
 # do not edit the following lines
 
@@ -32,7 +32,7 @@ doc: vendor
 	--exclude "*/composer/*" \
 	--exclude "*/autoload.php" \
 	--destination build/docs/ \
-	--title "$(PACKAGE_NAME) $(PACKAGE_VERSION)" \
+	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
 	--template-theme "bootstrap"
 
 clean:

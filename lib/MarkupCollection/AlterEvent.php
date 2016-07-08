@@ -16,13 +16,16 @@ use Patron\MarkupCollection;
 
 /**
  * Event class for the `Patron\MarkupCollection::alter` event.
- *
- * @package Patron\MarkupCollection
  */
 class AlterEvent extends Event
 {
+	const TYPE = 'alter';
+
+	/**
+	 * @param MarkupCollection $target
+	 */
 	public function __construct(MarkupCollection $target)
 	{
-		parent::__construct($target, 'alter');
+		parent::__construct($target, self::TYPE);
 	}
 }

@@ -13,11 +13,27 @@ namespace Patron;
 
 class ControlNode extends Node
 {
+	/**
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * @var array
+	 */
 	public $args;
+
+	/**
+	 * @var Node[]
+	 */
 	public $nodes;
 
-	public function __construct($name, array $args, $nodes)
+	/**
+	 * @param string $name
+	 * @param array $args
+	 * @param Node[] $nodes
+	 */
+	public function __construct($name, array $args, array $nodes)
 	{
 		$this->name = $name;
 

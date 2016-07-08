@@ -14,9 +14,7 @@ namespace Patron;
 use ICanBoogie\OffsetNotDefined;
 
 /**
- * Exception throw in attempt to obtain a markup that is not defined.
- *
- * @package Patron
+ * Exception thrown in attempt to obtain a markup that is not defined.
  */
 class MarkupNotDefined extends OffsetNotDefined implements Exception
 {

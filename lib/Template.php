@@ -13,10 +13,21 @@ namespace Patron;
 
 class Template implements \IteratorAggregate
 {
+	/**
+	 * @var string|null
+	 */
 	public $file;
+
+	/**
+	 * @var Node[]
+	 */
 	public $nodes;
 
-	public function __construct(array $nodes, array $options=[])
+	/**
+	 * @param Node[] $nodes
+	 * @param array $options
+	 */
+	public function __construct(array $nodes, array $options = [])
 	{
 		$this->nodes = $nodes;
 
@@ -26,6 +37,9 @@ class Template implements \IteratorAggregate
 		}
 	}
 
+	/**
+	 * @return Node[]|\ArrayIterator
+	 */
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->nodes);

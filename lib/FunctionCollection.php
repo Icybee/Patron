@@ -13,8 +13,6 @@ namespace Patron;
 
 /**
  * A function collection
- *
- * @package Patron
  */
 class FunctionCollection implements \ArrayAccess
 {
@@ -23,6 +21,9 @@ class FunctionCollection implements \ArrayAccess
 	 */
 	private $collection = [];
 
+	/**
+	 * @param array $functions
+	 */
 	public function __construct(array $functions = [])
 	{
 		foreach ($functions as $name => $definition)

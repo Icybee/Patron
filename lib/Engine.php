@@ -21,8 +21,6 @@ define('WDPATRON_DELIMIT_MACROS', false);
 /**
  * Patron engine.
  *
- * @package Patron
- *
  * @property-read MarkupCollection $markups
  * @property-read FunctionCollection $functions
  */

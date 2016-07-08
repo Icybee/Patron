@@ -16,13 +16,16 @@ use Patron\FunctionCollection;
 
 /**
  * Event class for the `Patron\FunctionCollection::alter` event.
- *
- * @package Patron\FunctionCollection
  */
 class AlterEvent extends Event
 {
+	const TYPE = 'alter';
+
+	/**
+	 * @param FunctionCollection $target
+	 */
 	public function __construct(FunctionCollection $target)
 	{
-		parent::__construct($target, 'alter');
+		parent::__construct($target, self::TYPE);
 	}
 }

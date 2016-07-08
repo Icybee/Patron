@@ -28,6 +28,9 @@ class EvaluateNode extends ExpressionNode
 	 */
 	private $engine_context;
 
+	/**
+	 * @inheritdoc
+	 */
 	public function __invoke(Engine $engine, $context)
 	{
 		$this->engine = $engine;
@@ -36,6 +39,9 @@ class EvaluateNode extends ExpressionNode
 		return parent::__invoke($engine, $context);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function render($expression)
 	{
 		return $this->engine->evaluate($expression, false, $this->engine_context);

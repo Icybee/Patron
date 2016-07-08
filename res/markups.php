@@ -2,7 +2,7 @@
 
 namespace Patron;
 
-$hooks = __NAMESPACE__ . '\Hooks::';
+$hooks = Hooks::class . '::';
 
 return [
 

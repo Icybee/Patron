@@ -15,8 +15,6 @@ use ICanBoogie\OffsetNotDefined;
 
 /**
  * Exception throw in attempt to obtain a function that is not defined.
- *
- * @package Patron
  */
 class FunctionNotDefined extends OffsetNotDefined implements Exception
 {

@@ -31,8 +31,6 @@ class Evaluator
 	private $engine;
 
 	/**
-	 * Initialize the {@link $engine} property.
-	 *
 	 * @param Engine $engine
 	 */
 	public function __construct(Engine $engine)
@@ -49,7 +47,7 @@ class Evaluator
 	 *
 	 * @return mixed
 	 */
-	public function __invoke($context, $expression, $silent=false)
+	public function __invoke($context, $expression, $silent = false)
 	{
 		$tokens = $this->tokenize($expression);
 
@@ -58,6 +56,10 @@ class Evaluator
 
 	/**
 	 * Tokenize Javascript style function chain into an array of identifiers and functions
+	 *
+	 * @param string $str
+	 *
+	 * @return array
 	 */
 	protected function tokenize($str)
 	{
@@ -181,8 +183,6 @@ class Evaluator
 						# it might be an integer, a float, or maybe a constant !
 						#
 
-						$part_back = $part;
-
 						switch ($part)
 						{
 							case 'true':
@@ -264,7 +264,7 @@ class Evaluator
 		return $parts;
 	}
 
-	protected function evaluate($context, $expression, $tokens, $silent, $previous_identifier='__context__')
+	protected function evaluate($context, $expression, $tokens, $silent)
 	{
 		$expression_path = [];
 
@@ -300,7 +300,7 @@ class Evaluator
 					{
 						if ($silent)
 						{
-							return;
+							return null;
 						}
 
 						throw new ReferenceError(\ICanBoogie\format('Reference to undefined property %path of expression %expression (defined: :keys) in: :value', [
@@ -314,7 +314,6 @@ class Evaluator
 					}
 
 					$context = $next_value;
-					$previous_identifier = $identifier;
 				}
 				break;
 
@@ -326,7 +325,7 @@ class Evaluator
 
 					if ($args_evaluate)
 					{
-						$this->error('we should evaluate %eval', [ '%eval' => $args_evaluate ]);
+						$this->engine->error('we should evaluate %eval', [ '%eval' => $args_evaluate ]);
 					}
 
 					#
@@ -506,5 +505,7 @@ class Evaluator
 
 			return $container->$identifier;
 		}
+
+		return null;
 	}
 }

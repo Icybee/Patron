@@ -13,8 +13,6 @@ namespace Patron;
 
 /**
  * A markup collection
- *
- * @package Patron
  */
 class MarkupCollection implements \ArrayAccess
 {
@@ -23,6 +21,9 @@ class MarkupCollection implements \ArrayAccess
 	 */
 	private $collection = [];
 
+	/**
+	 * @param array $markups
+	 */
 	public function __construct(array $markups = [])
 	{
 		foreach ($markups as $name => $definition)
