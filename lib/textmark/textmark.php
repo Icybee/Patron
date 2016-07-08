@@ -88,6 +88,8 @@ class Textmark_Parser extends MarkdownExtra_Parser
 	{
 		return preg_replace_callback('#^https?://[^\s]+$#m', function($matches) {
 
+			static $attributes = 'frameborder="0" allowfullscreen';
+
 			list($url) = $matches;
 
 			#
@@ -107,7 +109,7 @@ class Textmark_Parser extends MarkdownExtra_Parser
 				$id = $params['v'];
 
 				$html = <<<EOT
-<iframe class="embed embed--youtube" frameborder="0" src="https://www.youtube.com/embed/$id?controls=2"></iframe>
+<iframe class="embed embed--youtube" $attributes src="https://www.youtube.com/embed/$id?controls=2"></iframe>
 EOT;
 
 				return $this->hashPart($html, 'B');
@@ -122,7 +124,7 @@ EOT;
 				$id = urlencode($url);
 
 				$html = <<<EOT
-<iframe class="embed embed--soundcloud" frameborder="0" src="https://w.soundcloud.com/player/?url=$url"></iframe>
+<iframe class="embed embed--soundcloud" $attributes src="https://w.soundcloud.com/player/?url=$url"></iframe>
 EOT;
 
 				return $this->hashPart($html, 'B');
@@ -135,7 +137,7 @@ EOT;
 			if (preg_match('#vimeo.com/(\d+)#', $url, $matches))
 			{
 				$html = <<<EOT
-<iframe class="embed embed--vimeo" src="https://player.vimeo.com/video/{$matches[1]}?show_title=1&show_byline=1&show_portrait=0&color=F65FB8" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe class="embed embed--vimeo" $attributes src="https://player.vimeo.com/video/{$matches[1]}?show_title=1&show_byline=1&show_portrait=0&color=F65FB8" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 EOT;
 
 				return $this->hashPart($html, 'B');
@@ -149,7 +151,7 @@ EOT;
 			if (preg_match('#dailymotion\.com/video/([^_]+)#', $url, $matches))
 			{
 				$html = <<<EOT
-<iframe class="embed embed--dailymotion" frameborder="0" src="//www.dailymotion.com/embed/video/{$matches[1]}"></iframe>
+<iframe class="embed embed--dailymotion" $attributes src="//www.dailymotion.com/embed/video/{$matches[1]}"></iframe>
 EOT;
 				return $this->hashPart($html, 'B');
 			}
@@ -161,7 +163,7 @@ EOT;
 			if (preg_match('#instagram.com/p/([0-9A-Za-z\-]+)#', $url, $matches))
 			{
 				$html = <<<EOT
-<iframe class="embed embed--instagram" frameborder="0" src="//instagram.com/p/{$matches[1]}/embed/"></iframe>
+<iframe class="embed embed--instagram" $attributes src="//instagram.com/p/{$matches[1]}/embed/"></iframe>
 EOT;
 				return $this->hashPart($html, 'B');
 			}
