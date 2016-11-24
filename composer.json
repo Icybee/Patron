@@ -18,11 +18,15 @@
 		"source": "https://github.com/Icybee/Patron"
 	},
 	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"require": {
-		"php": "^5.5|^7.0",
+		"php": ">=5.6",
 		"icanboogie/common": "^1.2",
-		"icanboogie/render": "^0.5|^0.6",
+		"icanboogie/render": "^0.6",
 		"icybee/bluetihi": "^0.0.3"
+	},
+	"require-dev": {
+		"icanboogie/icanboogie": "^4.0"
 	},
 	"suggest": {
 		"icanboogie/i18n": "Required to use the translation notation and markup.",

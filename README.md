@@ -578,7 +578,7 @@ The [FunctionNotDefined][] exception is thrown if the function called is not def
 
 ## Event hooks
 
-- `ICanBoogie\Core::boot`: This event is used to attaches event hooks to
+- `ICanBoogie\Application::boot`: This event is used to attaches event hooks to
 `MarkupCollection::alter` and `FunctionCollection::alter` in order to add the markups and
 functions defined in the `patron.markups` and `patron.function` configs.
 

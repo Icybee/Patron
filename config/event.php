@@ -8,6 +8,6 @@ $hooks = Hooks::class . '::';
 
 return [
 
-	ICanBoogie\Core::class . '::boot' => $hooks . 'on_core_boot'
+	ICanBoogie\Application::class . '::boot' => $hooks . 'on_core_boot'
 
 ];

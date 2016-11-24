@@ -13,7 +13,7 @@ namespace Patron;
 
 use Brickrouge\Pager;
 
-use ICanBoogie\Core;
+use ICanBoogie\Application;
 use ICanBoogie\Render\TemplateName;
 
 class Hooks
@@ -709,10 +709,10 @@ class Hooks
 	 * to add the markups and functions defined in the `patron.markups` and `patron.function`
 	 * configs.
 	 *
-	 * @param Core\BootEvent $event
-	 * @param Core $app
+	 * @param Application\BootEvent $event
+	 * @param Application $app
 	 */
-	static public function on_core_boot(Core\BootEvent $event, Core $app)
+	static public function on_core_boot(Application\BootEvent $event, Application $app)
 	{
 		$app->events->attach(function(MarkupCollection\AlterEvent $event, MarkupCollection $markups) use ($app) {
 
