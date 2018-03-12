@@ -135,7 +135,7 @@ class Engine
 		}
 		else if ($alert instanceof \Exception)
 		{
-			$alert = class_exists('ICanBoogie\Debug') ? Debug::format_alert($alert) : (string) $alert;
+			$alert = (string) $alert;
 		}
 		else
 		{
@@ -471,14 +471,7 @@ class Engine
 			}
 			catch (\Exception $e)
 			{
-				if (class_exists('ICanBoogie\Debug'))
-				{
-					$rc .= Debug::format_alert($e);
-				}
-				else
-				{
-					$rc .= $e;
-				}
+				$rc .= "<pre>$e</pre>";
 			}
 
 			$rc .= $this->fetchErrors();
