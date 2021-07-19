@@ -21,7 +21,7 @@
 	"prefer-stable": true,
 	"require": {
 		"php": ">=5.6",
-		"icanboogie/common": "^1.2",
+		"icanboogie/common": "^1.2|^2.0",
 		"icanboogie/render": "^0.6",
 		"icybee/bluetihi": "^0.0.3"
 	},
