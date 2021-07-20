@@ -87,7 +87,7 @@ class ControlNode extends Node
 
 						//\ICanBoogie\log('\4:: evaluate expression "\3" with value: \5, params \1 and args \2', array($hook->params, $args, $param, $name, $value));
 
-						if ($value{0} == ':')
+						if ($value[0] == ':')
 						{
 							$args[$param] = substr($value, 1);
 						}

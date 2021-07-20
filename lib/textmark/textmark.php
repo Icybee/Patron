@@ -289,7 +289,7 @@ EOT;
 
 	function _doHeaders_callback_setext($matches)
 	{
-		switch ($matches[3]{0})
+		switch ($matches[3][0])
 		{
 			case '#': $level = 1; break;
 			case '=': $level = 2; break;
@@ -320,6 +320,8 @@ EOT;
 
 	function doSpan($text)
 	{
+	    return $text; // something is broken with PHP 8 :(
+
 		$clas = "(?:\([^)]+\))";
 		$styl = "(?:\{[^}]+\})";
 		$lnge = "(?:\[[^]]+\])";
@@ -950,9 +952,9 @@ EOT;
 
 			for ($i = 0 ; $i < strlen($line) ; $i++)
 			{
-				$c = $line{$i};
+				$c = $line[$i];
 
-				if (($c == $in_quotes) && (($i > 1) && ($line{$i - 1} != '\\')))
+				if (($c == $in_quotes) && (($i > 1) && ($line[$i - 1] != '\\')))
 				{
 					$in_quotes = NULL;
 				}
@@ -998,7 +1000,7 @@ EOT;
 
 		for ($i = 0 ; $i < $y ; $i++)
 		{
-			$c = $text{$i};
+			$c = $text[$i];
 
 			if (($c == self::QUOTE_SINGLE || $c == self::QUOTE_DOUBLE) && ($quote_start === null || $quote == $c))
 			{
@@ -1260,7 +1262,7 @@ EOT;
 	{
 		//		\ICanBoogie\log('## \1 ## \2', __FUNCTION__, $matches);
 
-		if ($matches[1]{0} == '$')
+		if ($matches[1][0] == '$')
 		{
 			return $matches[0];
 		}

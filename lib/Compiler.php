@@ -133,7 +133,7 @@ class Compiler
 	{
 		$escape = true;
 
-		if ($source{strlen($source) - 1} == '=')
+		if ($source[strlen($source) - 1] == '=')
 		{
 			$escape = false;
 			$source = substr($source, 0, -1);

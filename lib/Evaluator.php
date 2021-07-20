@@ -63,7 +63,7 @@ class Evaluator
 	 */
 	protected function tokenize($str)
 	{
-		if ($str{0} == '@')
+		if ($str[0] == '@')
 		{
 			$str = 'this.' . substr($str, 1);
 		}
@@ -86,7 +86,7 @@ class Evaluator
 
 		for ($i = 0 ; $i < $length ; $i++)
 		{
-			$c = $str{$i};
+			$c = $str[$i];
 
 			if ($escape)
 			{
@@ -268,7 +268,7 @@ class Evaluator
 	{
 		$expression_path = [];
 
-		foreach ($tokens as $i => $part)
+		foreach ($tokens as $part)
 		{
 			$identifier = $part[self::TOKEN_VALUE];
 
